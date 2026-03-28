@@ -1,0 +1,45 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Navigation from '@components/Navigation.astro';
+import Footer from '@components/Footer.astro';
+---
+
+<BaseLayout title="About — Agent Literacy">
+  <div class="page-container">
+    <Navigation />
+    <article class="about-content">
+      <h1>About Agent Literacy</h1>
+      <div class="prose">
+        <p>We're in the early days of a fundamental shift in how people work. AI agents aren't just tools that execute commands — they're collaborators that can reshape how you think about problems.</p>
+        <p>Agent Literacy exists to help people navigate this shift. Not with hype or fear, but with practical frameworks, honest observations, and real examples of what human-agent collaboration looks like when it's done well.</p>
+        <p>This site is built by someone figuring this out in real time, sharing what they learn along the way. If you're curious about working with agents — whether for yourself or your team — you're in the right place.</p>
+      </div>
+    </article>
+    <Footer />
+  </div>
+</BaseLayout>
+
+<style>
+  .page-container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 10vh 24px 40px;
+  }
+
+  h1 {
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    margin-bottom: 32px;
+  }
+
+  .prose {
+    font: var(--font-body);
+    color: var(--color-text-secondary);
+  }
+
+  .prose p {
+    margin-bottom: 20px;
+    line-height: 1.8;
+  }
+</style>

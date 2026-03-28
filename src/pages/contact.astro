@@ -1,0 +1,54 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Navigation from '@components/Navigation.astro';
+import Footer from '@components/Footer.astro';
+---
+
+<BaseLayout title="Contact — Agent Literacy">
+  <div class="page-container">
+    <Navigation />
+    <article class="contact-content">
+      <h1>Get in touch</h1>
+      <div class="prose">
+        <p>Interested in agent literacy training for your team? Have a question or want to share something you're seeing in this space?</p>
+        <p>Reach out at <a href="mailto:hello@agentliteracy.com">hello@agentliteracy.com</a></p>
+      </div>
+    </article>
+    <Footer />
+  </div>
+</BaseLayout>
+
+<style>
+  .page-container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 10vh 24px 40px;
+  }
+
+  h1 {
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    margin-bottom: 32px;
+  }
+
+  .prose {
+    font: var(--font-body);
+    color: var(--color-text-secondary);
+  }
+
+  .prose p {
+    margin-bottom: 20px;
+    line-height: 1.8;
+  }
+
+  .prose a {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .prose a:hover {
+    color: var(--color-text);
+  }
+</style>
