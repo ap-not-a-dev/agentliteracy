@@ -1,0 +1,137 @@
+<section id="phase-reflect" class="phase" data-phase="reflect" style="display:none;">
+  <div class="reflect-line dim" data-line="1">Notice what just happened.</div>
+  <div class="reflect-line dim" data-line="2">The agent didn't give you a to-do list.</div>
+  <div class="reflect-line dim" data-line="3">It didn't summarize what you already knew.</div>
+  <div class="reflect-line bright" data-line="4">It changed how you were thinking about the problem.</div>
+  <div class="reflect-line accent" data-line="5">That's not automation. That's collaboration.</div>
+  <div class="reflect-cta" id="reflect-cta">
+    <button id="explore-btn" type="button">Explore the concepts behind this &#8594;</button>
+  </div>
+</section>
+
+<style>
+  .phase {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20vh 24px 40px;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity var(--transition-slow), transform var(--transition-slow);
+  }
+
+  .phase.active {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .phase.exit {
+    opacity: 0;
+    transform: translateY(-30px);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+  }
+
+  .reflect-line {
+    font: var(--font-section);
+    max-width: 560px;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: all var(--transition-slow);
+  }
+
+  .reflect-line.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .reflect-line.dim {
+    color: var(--color-text-dim);
+  }
+
+  .reflect-line.bright {
+    color: var(--color-text);
+    font-weight: 500;
+    margin-top: 32px;
+  }
+
+  .reflect-line.accent {
+    color: var(--color-accent);
+    font-weight: 400;
+    margin-top: 32px;
+    font-size: 18px;
+  }
+
+  .reflect-line[data-line="2"] {
+    margin-top: 24px;
+  }
+
+  .reflect-line[data-line="3"] {
+    margin-top: 8px;
+  }
+
+  .reflect-cta {
+    margin-top: 48px;
+    opacity: 0;
+    transition: all var(--transition-slow);
+  }
+
+  .reflect-cta.visible {
+    opacity: 1;
+  }
+
+  button {
+    background: var(--color-text);
+    color: var(--color-bg);
+    border: none;
+    border-radius: 10px;
+    padding: 14px 32px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all var(--transition-fast);
+  }
+
+  button:hover {
+    background: #e2e8f0;
+    transform: translateY(-1px);
+  }
+
+  @media (max-width: 600px) {
+    .reflect-line {
+      font-size: 18px;
+    }
+    .reflect-line.accent {
+      font-size: 16px;
+    }
+  }
+</style>
+
+<script>
+  const exploreBtn = document.getElementById('explore-btn') as HTMLButtonElement;
+
+  exploreBtn.addEventListener('click', () => {
+    document.dispatchEvent(new CustomEvent('experience:explore'));
+  });
+
+  function startReflectionAnimation() {
+    const lines = document.querySelectorAll('.reflect-line');
+    lines.forEach((line, i) => {
+      setTimeout(() => {
+        line.classList.add('visible');
+      }, i * 1200);
+    });
+    setTimeout(() => {
+      document.getElementById('reflect-cta')!.classList.add('visible');
+    }, lines.length * 1200 + 800);
+  }
+
+  document.addEventListener('experience:start-reflection', () => {
+    startReflectionAnimation();
+  });
+</script>
