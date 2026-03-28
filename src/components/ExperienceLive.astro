@@ -1,0 +1,265 @@
+<section id="phase-live" class="phase" data-phase="live" style="display:none;">
+  <div class="conversation" id="conversation"></div>
+  <div class="live-input-area" id="live-input-area">
+    <textarea id="live-input" placeholder="Continue the conversation..." rows="1"></textarea>
+  </div>
+</section>
+
+<template id="tpl-user-msg">
+  <div class="msg msg-user"></div>
+</template>
+
+<template id="tpl-agent-msg">
+  <div class="msg msg-agent">
+    <div class="agent-label">Agent</div>
+    <div class="agent-text"></div>
+  </div>
+</template>
+
+<template id="tpl-typing">
+  <div class="msg msg-agent">
+    <div class="typing-indicator">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</template>
+
+<style>
+  .phase {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12vh 24px 40px;
+    max-width: 640px;
+    margin: 0 auto;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity var(--transition-slow), transform var(--transition-slow);
+  }
+
+  .phase.active {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .phase.exit {
+    opacity: 0;
+    transform: translateY(-30px);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+  }
+
+  .conversation {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .msg {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: all 0.5s ease;
+    max-width: 90%;
+  }
+
+  .msg.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .msg-user {
+    align-self: flex-end;
+    background: var(--color-input-focus-bg);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px 16px 4px 16px;
+    padding: 14px 18px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+  }
+
+  .msg-agent {
+    align-self: flex-start;
+  }
+
+  .agent-label {
+    font: var(--font-label);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--color-text-muted);
+    margin-bottom: 10px;
+  }
+
+  .agent-text {
+    font: var(--font-body);
+    color: #e2e8f0;
+  }
+
+  .agent-text strong {
+    font-weight: 500;
+    color: var(--color-text);
+  }
+
+  .typing-indicator {
+    display: flex;
+    gap: 5px;
+    padding: 8px 0;
+  }
+
+  .typing-indicator span {
+    width: 6px;
+    height: 6px;
+    background: var(--color-text-muted);
+    border-radius: 50%;
+    animation: typing 1.4s infinite;
+  }
+
+  .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes typing {
+    0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+    30% { opacity: 1; transform: translateY(-4px); }
+  }
+
+  .live-input-area {
+    width: 100%;
+    margin-top: 24px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.5s ease;
+  }
+
+  .live-input-area.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .live-input-area textarea {
+    width: 100%;
+    background: var(--color-input-bg);
+    border: 1px solid var(--color-input-border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    color: var(--color-text);
+    font-size: 14px;
+    line-height: 1.6;
+    resize: none;
+    height: 56px;
+    outline: none;
+    transition: all var(--transition-normal);
+  }
+
+  .live-input-area textarea:focus {
+    border-color: var(--color-input-focus-border);
+    background: var(--color-input-focus-bg);
+  }
+
+  .live-input-area textarea::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  @media (max-width: 600px) {
+    .phase {
+      padding-top: 8vh;
+    }
+  }
+</style>
+
+<script>
+  const AGENT_RESPONSE_1 = "Interesting. Before I help you think through this, I want to ask you something: **what would it look like if this went perfectly?** Not the tasks or the timeline \u2014 the outcome. What\u2019s true about the world after you\u2019ve done this well?";
+  const AGENT_RESPONSE_2 = "Now we're getting somewhere. You didn't start with that clarity \u2014 we got there by thinking together. That's the thing most people miss about working with agents: **the value isn't in the answer, it's in the better question.**";
+
+  const conversation = document.getElementById('conversation') as HTMLDivElement;
+  const liveInputArea = document.getElementById('live-input-area') as HTMLDivElement;
+  const liveInput = document.getElementById('live-input') as HTMLTextAreaElement;
+
+  let exchangeCount = 0;
+
+  function addUserMsg(text: string): HTMLElement {
+    const tpl = (document.getElementById('tpl-user-msg') as HTMLTemplateElement).content.cloneNode(true) as DocumentFragment;
+    const el = tpl.querySelector('.msg') as HTMLElement;
+    el.textContent = text;
+    conversation.appendChild(el);
+    requestAnimationFrame(() => el.classList.add('visible'));
+    return el;
+  }
+
+  function addAgentMsg(text: string): HTMLElement {
+    const tpl = (document.getElementById('tpl-agent-msg') as HTMLTemplateElement).content.cloneNode(true) as DocumentFragment;
+    const el = tpl.querySelector('.msg') as HTMLElement;
+    const textEl = el.querySelector('.agent-text') as HTMLElement;
+
+    const parts = text.split(/\*\*(.*?)\*\*/g);
+    for (let i = 0; i < parts.length; i++) {
+      if (i % 2 === 1) {
+        const strong = document.createElement('strong');
+        strong.textContent = parts[i];
+        textEl.appendChild(strong);
+      } else {
+        textEl.appendChild(document.createTextNode(parts[i]));
+      }
+    }
+
+    conversation.appendChild(el);
+    requestAnimationFrame(() => el.classList.add('visible'));
+    return el;
+  }
+
+  function showTyping(): HTMLElement {
+    const tpl = (document.getElementById('tpl-typing') as HTMLTemplateElement).content.cloneNode(true) as DocumentFragment;
+    const el = tpl.querySelector('.msg') as HTMLElement;
+    el.classList.add('visible');
+    conversation.appendChild(el);
+    return el;
+  }
+
+  function startConversation(userText: string) {
+    addUserMsg(userText);
+
+    setTimeout(() => {
+      const typing = showTyping();
+      setTimeout(() => {
+        typing.remove();
+        addAgentMsg(AGENT_RESPONSE_1);
+        setTimeout(() => {
+          liveInputArea.classList.add('visible');
+          liveInput.focus();
+        }, 600);
+      }, 2500);
+    }, 600);
+  }
+
+  liveInput.addEventListener('keydown', (e: KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      const text = liveInput.value.trim();
+      if (!text) return;
+      liveInput.value = '';
+      exchangeCount++;
+      liveInputArea.classList.remove('visible');
+
+      addUserMsg(text);
+
+      setTimeout(() => {
+        const typing = showTyping();
+        setTimeout(() => {
+          typing.remove();
+          addAgentMsg(AGENT_RESPONSE_2);
+          setTimeout(() => {
+            document.dispatchEvent(new CustomEvent('experience:conversation-done'));
+          }, 2000);
+        }, 3000);
+      }, 600);
+    }
+  });
+
+  document.addEventListener('experience:submit-hook', ((e: CustomEvent) => {
+    startConversation(e.detail.text);
+  }) as EventListener);
+</script>
