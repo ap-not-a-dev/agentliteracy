@@ -1,0 +1,105 @@
+---
+import { getCollection } from 'astro:content';
+import ResourceCard from '@components/ResourceCard.astro';
+import Navigation from '@components/Navigation.astro';
+import Footer from '@components/Footer.astro';
+
+interface Props {
+  isPhase4?: boolean;
+}
+
+const { isPhase4 = false } = Astro.props;
+
+const allResources = await getCollection('resources');
+const sorted = allResources.sort((a, b) => {
+  if (a.data.featured && !b.data.featured) return -1;
+  if (!a.data.featured && b.data.featured) return 1;
+  return b.data.date.getTime() - a.data.date.getTime();
+});
+---
+
+<section
+  id={isPhase4 ? 'phase-resources' : undefined}
+  class:list={['resources-section', { phase: isPhase4 }]}
+  data-phase={isPhase4 ? 'resources' : undefined}
+  style={isPhase4 ? 'display:none;' : undefined}
+>
+  <Navigation />
+  <div class="resources-header">
+    <h2>Go Deeper</h2>
+    <p>Frameworks, guides, and resources for the human side of human-agent collaboration.</p>
+  </div>
+  <div class="resource-grid">
+    {sorted.map((resource) => (
+      <ResourceCard
+        title={resource.data.title}
+        description={resource.data.description}
+        type={resource.data.type}
+        readTime={resource.data.readTime}
+        featured={resource.data.featured}
+        slug={resource.id}
+      />
+    ))}
+  </div>
+  <Footer />
+</section>
+
+<style>
+  .resources-section {
+    padding: 10vh 24px 40px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .phase {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity var(--transition-slow), transform var(--transition-slow);
+  }
+
+  .phase.active {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .resources-header {
+    text-align: center;
+  }
+
+  .resources-header h2 {
+    font: var(--font-label);
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--color-text-muted);
+    margin-bottom: 12px;
+  }
+
+  .resources-header p {
+    font-size: 18px;
+    font-weight: 300;
+    color: #94a3b8;
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .resource-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 600px) {
+    .resource-grid {
+      grid-template-columns: 1fr;
+    }
+    .resources-header p {
+      font-size: 16px;
+    }
+  }
+</style>

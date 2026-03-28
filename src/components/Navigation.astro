@@ -1,0 +1,71 @@
+---
+interface Props {
+  activeFilter?: string;
+}
+
+const { activeFilter = 'all' } = Astro.props;
+const filters = ['All', 'Articles', 'Guides', 'Resources', 'Media'];
+---
+
+<nav class="site-nav">
+  <a href="/" class="wordmark">Agent Literacy</a>
+  <div class="nav-links">
+    {filters.map((filter) => (
+      <a
+        class:list={['nav-link', { active: filter.toLowerCase() === activeFilter }]}
+        data-filter={filter.toLowerCase()}
+      >
+        {filter}
+      </a>
+    ))}
+    <a href="/about" class="nav-link">About</a>
+  </div>
+</nav>
+
+<style>
+  .site-nav {
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 48px;
+  }
+
+  .wordmark {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+    color: var(--color-text);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .nav-link {
+    color: var(--color-text-muted);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: color var(--transition-fast);
+  }
+
+  .nav-link:hover,
+  .nav-link.active {
+    color: var(--color-text);
+  }
+
+  @media (max-width: 600px) {
+    .site-nav {
+      gap: 16px;
+    }
+    .nav-links {
+      gap: 16px;
+    }
+  }
+</style>
