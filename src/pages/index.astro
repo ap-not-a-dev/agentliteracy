@@ -1,8 +1,15 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
+import ExperienceOrchestrator from '@components/ExperienceOrchestrator.astro';
 import ExperienceHook from '@components/ExperienceHook.astro';
+import ExperienceLive from '@components/ExperienceLive.astro';
+import ExperienceReflect from '@components/ExperienceReflect.astro';
 ---
 
 <BaseLayout title="Agent Literacy — Learn to work with AI agents">
-  <ExperienceHook />
+  <ExperienceOrchestrator>
+    <ExperienceHook />
+    <ExperienceLive />
+    <ExperienceReflect />
+  </ExperienceOrchestrator>
 </BaseLayout>

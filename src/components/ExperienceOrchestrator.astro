@@ -1,0 +1,82 @@
+<div id="experience-container">
+  <slot />
+</div>
+<a id="skip-link" class="skip-link">skip to resources &#8594;</a>
+
+<style>
+  #experience-container {
+    position: relative;
+  }
+
+  .skip-link {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    font-size: 12px;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color var(--transition-fast);
+    z-index: 100;
+  }
+
+  .skip-link:hover {
+    color: var(--color-text-dim);
+  }
+
+  .skip-link.hidden {
+    display: none;
+  }
+</style>
+
+<script>
+  const skipLink = document.getElementById('skip-link') as HTMLAnchorElement;
+
+  function transitionPhase(fromId: string, toId: string) {
+    const from = document.getElementById(fromId);
+    const to = document.getElementById(toId);
+    if (!from || !to) return;
+
+    from.classList.remove('active');
+    from.classList.add('exit');
+
+    setTimeout(() => {
+      from.style.display = 'none';
+      to.style.display = 'flex';
+      requestAnimationFrame(() => to.classList.add('active'));
+    }, 400);
+  }
+
+  // Hook -> Live
+  document.addEventListener('experience:submit-hook', () => {
+    skipLink.classList.add('hidden');
+    transitionPhase('phase-hook', 'phase-live');
+  });
+
+  // Live -> Reflect
+  document.addEventListener('experience:conversation-done', () => {
+    transitionPhase('phase-live', 'phase-reflect');
+    setTimeout(() => {
+      document.dispatchEvent(new CustomEvent('experience:start-reflection'));
+    }, 800);
+  });
+
+  // Reflect -> Resources
+  document.addEventListener('experience:explore', () => {
+    transitionPhase('phase-reflect', 'phase-resources');
+  });
+
+  // Skip directly to resources
+  skipLink.addEventListener('click', () => {
+    skipLink.classList.add('hidden');
+    document.querySelectorAll('.phase').forEach((p) => {
+      (p as HTMLElement).classList.remove('active');
+      (p as HTMLElement).style.display = 'none';
+    });
+    const resources = document.getElementById('phase-resources');
+    if (resources) {
+      resources.style.display = 'flex';
+      requestAnimationFrame(() => resources.classList.add('active'));
+    }
+  });
+</script>
