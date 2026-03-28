@@ -1,0 +1,69 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  type: string;
+  readTime: string;
+  featured?: boolean;
+  slug: string;
+}
+
+const { title, description, type, readTime, featured = false, slug } = Astro.props;
+---
+
+<a href={`/resources/${slug}`} class:list={['resource-card', { featured }]}>
+  <div class="card-tag">{type}</div>
+  <h3>{title}</h3>
+  <p>{description}</p>
+  <div class="card-meta">{readTime}</div>
+</a>
+
+<style>
+  .resource-card {
+    display: block;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 28px 24px;
+    transition: all var(--transition-normal);
+    cursor: pointer;
+  }
+
+  .resource-card:hover {
+    background: var(--color-surface-hover);
+    border-color: var(--color-border-hover);
+    transform: translateY(-2px);
+  }
+
+  .resource-card.featured {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, rgba(129, 140, 248, 0.08) 0%, var(--color-surface) 100%);
+    border-color: rgba(129, 140, 248, 0.15);
+  }
+
+  .card-tag {
+    font: var(--font-label);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--color-accent);
+    margin-bottom: 12px;
+  }
+
+  h3 {
+    font: var(--font-card-title);
+    color: #e2e8f0;
+    margin-bottom: 8px;
+  }
+
+  p {
+    font-size: 12px;
+    color: var(--color-text-dim);
+    line-height: 1.6;
+  }
+
+  .card-meta {
+    margin-top: 16px;
+    font: var(--font-meta);
+    color: var(--color-text-muted);
+  }
+</style>
