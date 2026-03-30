@@ -1,9 +1,23 @@
 <section id="phase-hook" class="phase active" data-phase="hook">
   <h1>You're about to work with an agent.<br><span class="bold">Let's do something real.</span></h1>
-  <p class="subtext">What's something you're working on right now? A project, a problem, a decision you're stuck on.</p>
-  <div class="input-area">
-    <textarea id="hook-input" placeholder="I'm working on..." rows="1"></textarea>
-    <button class="submit-btn" id="hook-submit" type="button">Let's go</button>
+  <p class="subtext">Pick a job you'd hand to an agent.</p>
+  <div class="options">
+    <button class="option-card" data-scenario="standup" type="button">
+      <span class="option-icon">🔄</span>
+      <span class="option-text">Run my team's weekly standup</span>
+    </button>
+    <button class="option-card" data-scenario="website" type="button">
+      <span class="option-icon">🌐</span>
+      <span class="option-text">Keep my website updated and running</span>
+    </button>
+    <button class="option-card" data-scenario="questions" type="button">
+      <span class="option-icon">💬</span>
+      <span class="option-text">Handle incoming questions about my program</span>
+    </button>
+    <button class="option-card" data-scenario="market" type="button">
+      <span class="option-icon">📡</span>
+      <span class="option-text">Monitor my market and tell me what matters</span>
+    </button>
   </div>
 </section>
 
@@ -54,60 +68,44 @@
     max-width: 400px;
   }
 
-  .input-area {
+  .options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    max-width: 560px;
     width: 100%;
-    max-width: 520px;
-    position: relative;
   }
 
-  textarea {
-    width: 100%;
-    background: var(--color-input-bg);
-    border: 1px solid var(--color-input-border);
+  .option-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
     border-radius: 12px;
-    padding: 18px 20px;
+    padding: 20px;
+    color: var(--color-text-secondary);
+    font-size: 14px;
+    line-height: 1.4;
+    text-align: left;
+    transition: all var(--transition-normal);
+    cursor: pointer;
+  }
+
+  .option-card:hover {
+    background: var(--color-surface-hover);
+    border-color: var(--color-border-hover);
+    transform: translateY(-2px);
     color: var(--color-text);
-    font-size: 15px;
-    line-height: 1.6;
-    resize: none;
-    height: 64px;
-    transition: all var(--transition-normal);
-    outline: none;
   }
 
-  textarea:focus {
-    border-color: var(--color-input-focus-border);
-    background: var(--color-input-focus-bg);
-    height: 100px;
+  .option-icon {
+    font-size: 24px;
+    flex-shrink: 0;
   }
 
-  textarea::placeholder {
-    color: var(--color-text-muted);
-  }
-
-  .submit-btn {
-    position: absolute;
-    right: 12px;
-    bottom: 12px;
-    background: var(--color-text);
-    color: var(--color-bg);
-    border: none;
-    border-radius: 8px;
-    padding: 8px 20px;
-    font-size: 13px;
-    font-weight: 600;
-    opacity: 0;
-    transform: translateY(4px);
-    transition: all var(--transition-normal);
-  }
-
-  .submit-btn.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  .submit-btn:hover {
-    background: #e2e8f0;
+  .option-text {
+    font-weight: 500;
   }
 
   @media (max-width: 600px) {
@@ -117,24 +115,22 @@
     .subtext {
       font-size: 14px;
     }
+    .options {
+      grid-template-columns: 1fr;
+    }
   }
 </style>
 
 <script>
-  const hookInput = document.getElementById('hook-input') as HTMLTextAreaElement;
-  const hookSubmit = document.getElementById('hook-submit') as HTMLButtonElement;
+  const optionCards = document.querySelectorAll('.option-card');
 
-  hookInput.addEventListener('input', () => {
-    if (hookInput.value.trim().length > 5) {
-      hookSubmit.classList.add('visible');
-    } else {
-      hookSubmit.classList.remove('visible');
-    }
-  });
-
-  hookSubmit.addEventListener('click', () => {
-    const text = hookInput.value.trim();
-    if (!text) return;
-    document.dispatchEvent(new CustomEvent('experience:submit-hook', { detail: { text } }));
+  optionCards.forEach((card) => {
+    card.addEventListener('click', () => {
+      const scenario = (card as HTMLElement).dataset.scenario;
+      const text = card.querySelector('.option-text')?.textContent || '';
+      document.dispatchEvent(new CustomEvent('experience:submit-hook', {
+        detail: { scenario, text }
+      }));
+    });
   });
 </script>
