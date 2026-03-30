@@ -58,25 +58,29 @@
     const reflect = document.getElementById('phase-reflect');
     if (!reflect) return;
 
-    // Show reflection flowing below the conversation
-    reflect.style.display = 'flex';
+    // Find the closer message to scroll to
+    const closerMsgs = document.querySelectorAll('.msg-closer');
+    const closer = closerMsgs[closerMsgs.length - 1];
+    const scrollTarget = closer || reflect;
 
-    // Scroll so the last agent message is at the top, reflection visible below
+    // First scroll the closer to the top of the viewport
+    scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    // After scroll settles, reveal the reflection below
     setTimeout(() => {
-      // Find the last agent message (the "I will" closer) to scroll to top
-      const agentMsgs = document.querySelectorAll('.msg-agent');
-      const lastAgent = agentMsgs[agentMsgs.length - 1];
-      const scrollTarget = lastAgent || reflect;
-      scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      reflect.style.display = 'flex';
+      requestAnimationFrame(() => {
+        reflect.classList.add('active');
+        // Now scroll again so the reflection is visible
+        setTimeout(() => {
+          reflect.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }, 200);
+      });
 
       setTimeout(() => {
-        reflect.classList.add('active');
-      }, 600);
-    }, 100);
-
-    setTimeout(() => {
-      document.dispatchEvent(new CustomEvent('experience:start-reflection'));
-    }, 800);
+        document.dispatchEvent(new CustomEvent('experience:start-reflection'));
+      }, 400);
+    }, 1200);
   });
 
   // Reflect -> Resources
