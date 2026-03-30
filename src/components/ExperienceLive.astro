@@ -250,26 +250,26 @@
   }
 
   .closer-steps {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
     margin-bottom: 20px;
   }
 
   .closer-step {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
+    align-items: center;
+    gap: 12px;
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 12px;
-    padding: 16px;
+    border-radius: 10px;
+    padding: 12px 14px;
   }
 
   .closer-step-icon {
     flex-shrink: 0;
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -279,36 +279,32 @@
   }
 
   .closer-step-icon img {
-    width: 16px;
-    height: 16px;
+    width: 15px;
+    height: 15px;
     opacity: 0.85;
     filter: brightness(0) invert(1);
   }
 
   .closer-step-body {
     display: flex;
-    flex-direction: column;
-    gap: 3px;
+    align-items: baseline;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
   }
 
   .closer-step-tool {
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
     color: #818cf8;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
 
   .closer-step-text {
     font-size: 13px;
-    line-height: 1.5;
-    color: #cbd5e1;
-  }
-
-  @media (max-width: 600px) {
-    .closer-steps {
-      grid-template-columns: 1fr;
-    }
+    line-height: 1.4;
+    color: #94a3b8;
   }
 
   .closer-outro {
@@ -358,12 +354,12 @@
       ],
       closerIntro: "Here's what I'll do.",
       closerSteps: [
-        { text: "Every Monday morning, I'll message each person on your team and collect their updates \u2014 what they shipped, what's blocked, what's next.", tool: { icon: "/icons/slack.svg", name: "Slack" } },
-        { text: "I'll check your calendar and flag any conflicts or meetings that need prep.", tool: { icon: "/icons/google-calendar.svg", name: "Google Calendar" } },
-        { text: "I'll pull the latest from your project tracker to spot anything slipping.", tool: { icon: "/icons/linear.svg", name: "Linear" } },
-        { text: "If someone hasn't responded, I'll follow up automatically.", tool: { icon: "/icons/email.svg", name: "Email" } }
+        { text: "Message each person and collect their updates", tool: { icon: "/icons/slack.svg", name: "Slack" } },
+        { text: "Check for conflicts or meetings that need prep", tool: { icon: "/icons/google-calendar.svg", name: "Calendar" } },
+        { text: "Pull the latest to spot anything slipping", tool: { icon: "/icons/linear.svg", name: "Linear" } },
+        { text: "Follow up with anyone who hasn't responded", tool: { icon: "/icons/email.svg", name: "Email" } }
       ],
-      closerOutro: "By the time you open your laptop, you'll have a summary that tells you exactly where to focus. You just read the brief."
+      closerOutro: "By the time you open your laptop, you'll have a summary that tells you exactly where to focus."
     },
     website: {
       agentOpener: "When something breaks on your site \u2014 or when you need to publish something new \u2014 what does that process look like right now?",
@@ -374,10 +370,10 @@
       ],
       closerIntro: "Here's what I'll do.",
       closerSteps: [
-        { text: "I'll monitor your site continuously \u2014 uptime, broken links, performance.", tool: { icon: "/icons/cloudflare.svg", name: "Cloudflare" } },
-        { text: "When you write something new, hand it to me and I'll format it, publish it, and make sure it looks right.", tool: { icon: "/icons/github.svg", name: "GitHub" } },
-        { text: "I'll track what's working and what isn't so you can make informed decisions.", tool: { icon: "/icons/google-analytics.svg", name: "Analytics" } },
-        { text: "If something breaks at 2am, I'll fix it and let you know in the morning.", tool: { icon: "/icons/slack.svg", name: "Slack" } }
+        { text: "Monitor uptime, broken links, and performance", tool: { icon: "/icons/cloudflare.svg", name: "Cloudflare" } },
+        { text: "Format and publish new content when you hand it off", tool: { icon: "/icons/github.svg", name: "GitHub" } },
+        { text: "Track what's working so you can make informed decisions", tool: { icon: "/icons/google-analytics.svg", name: "Analytics" } },
+        { text: "Fix issues and notify you in the morning", tool: { icon: "/icons/slack.svg", name: "Slack" } }
       ],
       closerOutro: "You'll get a weekly digest of what changed, what I caught, and what needs your decision."
     },
@@ -390,10 +386,10 @@
       ],
       closerIntro: "Here's what I'll do.",
       closerSteps: [
-        { text: "I'll learn everything about your program \u2014 the docs, the FAQs, the edge cases.", tool: { icon: "/icons/notion.svg", name: "Notion" } },
-        { text: "When a question comes in by email, I'll respond within minutes with the right answer in your tone.", tool: { icon: "/icons/email.svg", name: "Email" } },
-        { text: "For questions in Slack, same thing \u2014 fast, accurate, on-brand.", tool: { icon: "/icons/slack.svg", name: "Slack" } },
-        { text: "If something needs your judgment, I'll flag it with context in your CRM so you can reply in thirty seconds.", tool: { icon: "/icons/crm.svg", name: "CRM" } }
+        { text: "Learn your docs, FAQs, and edge cases", tool: { icon: "/icons/notion.svg", name: "Notion" } },
+        { text: "Respond to email questions in minutes, in your tone", tool: { icon: "/icons/email.svg", name: "Email" } },
+        { text: "Handle Slack questions the same way", tool: { icon: "/icons/slack.svg", name: "Slack" } },
+        { text: "Flag anything that needs your judgment with full context", tool: { icon: "/icons/crm.svg", name: "CRM" } }
       ],
       closerOutro: "You'll go from answering every question to only answering the interesting ones."
     },
@@ -406,10 +402,10 @@
       ],
       closerIntro: "Here's what I'll do.",
       closerSteps: [
-        { text: "I'll continuously scan industry news and publications for relevant developments.", tool: { icon: "/icons/news.svg", name: "News APIs" } },
-        { text: "I'll track your competitors and key voices on social media.", tool: { icon: "/icons/x.svg", name: "Twitter/X" } },
-        { text: "I'll monitor professional networks for market signals and hiring patterns.", tool: { icon: "/icons/linkedin.svg", name: "LinkedIn" } },
-        { text: "Every morning, I'll post a brief to your team \u2014 what changed and what it means for you.", tool: { icon: "/icons/slack.svg", name: "Slack" } }
+        { text: "Scan industry news and publications continuously", tool: { icon: "/icons/news.svg", name: "News" } },
+        { text: "Track competitors and key voices", tool: { icon: "/icons/x.svg", name: "Twitter/X" } },
+        { text: "Monitor for market signals and hiring patterns", tool: { icon: "/icons/linkedin.svg", name: "LinkedIn" } },
+        { text: "Post a morning brief to your team", tool: { icon: "/icons/slack.svg", name: "Slack" } }
       ],
       closerOutro: "Over time, I'll learn what you actually care about and filter harder."
     }
