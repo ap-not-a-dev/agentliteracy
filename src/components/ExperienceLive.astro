@@ -200,7 +200,10 @@
   }
 
   .tool-badge .tool-icon {
-    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    opacity: 0.8;
+    filter: brightness(0) invert(1);
   }
 
   .tools-footnote {
@@ -237,10 +240,10 @@
       ],
       agentCloser: "Here's what I'll do. Every Monday morning, I'll message each person on your team and collect their updates \u2014 what they shipped, what's blocked, what's next. I'll compare it against last week to spot anything slipping. By the time you open your laptop, you'll have a summary that tells you exactly where to focus. If someone hasn't responded, I've already followed up. You just read the brief.",
       tools: [
-        { icon: "\u{1F4AC}", name: "Slack" },
-        { icon: "\u{1F4C5}", name: "Google Calendar" },
-        { icon: "\u{1F4CB}", name: "Linear" },
-        { icon: "\u2709\uFE0F", name: "Email" }
+        { icon: "/icons/slack.svg", name: "Slack" },
+        { icon: "/icons/google-calendar.svg", name: "Google Calendar" },
+        { icon: "/icons/linear.svg", name: "Linear" },
+        { icon: "/icons/email.svg", name: "Email" }
       ]
     },
     website: {
@@ -252,10 +255,10 @@
       ],
       agentCloser: "Here's what I'll do. I'll monitor your site continuously \u2014 uptime, broken links, performance. When you write something new, hand it to me and I'll format it, publish it, and make sure it looks right. If something breaks at 2am, I'll fix it before you wake up. You'll get a weekly digest of what changed, what I caught, and what needs your decision.",
       tools: [
-        { icon: "\u{1F4BB}", name: "GitHub" },
-        { icon: "\u2601\uFE0F", name: "Cloudflare" },
-        { icon: "\u{1F4CA}", name: "Analytics" },
-        { icon: "\u{1F4AC}", name: "Slack" }
+        { icon: "/icons/github.svg", name: "GitHub" },
+        { icon: "/icons/cloudflare.svg", name: "Cloudflare" },
+        { icon: "/icons/google-analytics.svg", name: "Analytics" },
+        { icon: "/icons/slack.svg", name: "Slack" }
       ]
     },
     questions: {
@@ -267,10 +270,10 @@
       ],
       agentCloser: "Here's what I'll do. I'll learn everything about your program \u2014 the docs, the FAQs, the edge cases you've answered a hundred times. When a question comes in, I'll respond within minutes with the right answer in your tone. If something needs your judgment, I'll flag it with context so you can reply in thirty seconds instead of thirty minutes.",
       tools: [
-        { icon: "\u2709\uFE0F", name: "Email" },
-        { icon: "\u{1F4AC}", name: "Slack" },
-        { icon: "\u{1F4D3}", name: "Notion" },
-        { icon: "\u{1F465}", name: "CRM" }
+        { icon: "/icons/email.svg", name: "Email" },
+        { icon: "/icons/slack.svg", name: "Slack" },
+        { icon: "/icons/notion.svg", name: "Notion" },
+        { icon: "/icons/crm.svg", name: "CRM" }
       ]
     },
     market: {
@@ -282,11 +285,11 @@
       ],
       agentCloser: "Here's what I'll do. I'll track your competitors, your industry, and the topics you tell me matter. Every morning, you'll get a brief \u2014 what changed, what it means for you, and what you might want to act on. Over time, I'll learn what you actually care about and filter harder.",
       tools: [
-        { icon: "\u{1F4F0}", name: "News APIs" },
-        { icon: "\u{1D54F}", name: "Twitter/X" },
-        { icon: "\u{1F4BC}", name: "LinkedIn" },
-        { icon: "\u{1F4AC}", name: "Slack" },
-        { icon: "\u2709\uFE0F", name: "Email" }
+        { icon: "/icons/news.svg", name: "News APIs" },
+        { icon: "/icons/x.svg", name: "Twitter/X" },
+        { icon: "/icons/linkedin.svg", name: "LinkedIn" },
+        { icon: "/icons/slack.svg", name: "Slack" },
+        { icon: "/icons/email.svg", name: "Email" }
       ]
     }
   };
@@ -351,9 +354,12 @@
       const badge = document.createElement('div');
       badge.className = 'tool-badge';
 
-      const icon = document.createElement('span');
+      const icon = document.createElement('img');
       icon.className = 'tool-icon';
-      icon.textContent = tool.icon;
+      icon.src = tool.icon;
+      icon.alt = tool.name;
+      icon.width = 16;
+      icon.height = 16;
       badge.appendChild(icon);
 
       const name = document.createElement('span');
