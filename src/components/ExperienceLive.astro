@@ -1,8 +1,5 @@
 <section id="phase-live" class="phase" data-phase="live" style="display:none;">
   <div class="conversation" id="conversation"></div>
-  <div class="live-input-area" id="live-input-area">
-    <textarea id="live-input" placeholder="Continue the conversation..." rows="1"></textarea>
-  </div>
 </section>
 
 <template id="tpl-user-msg">
@@ -21,6 +18,20 @@
     <div class="typing-indicator">
       <span></span><span></span><span></span>
     </div>
+  </div>
+</template>
+
+<template id="tpl-follow-up">
+  <div class="msg msg-follow-up">
+    <div class="follow-up-options"></div>
+  </div>
+</template>
+
+<template id="tpl-tools">
+  <div class="msg msg-tools">
+    <div class="tools-label">Connected via MCP</div>
+    <div class="tools-row"></div>
+    <div class="tools-footnote">MCP is the open protocol that lets agents use your tools.</div>
   </div>
 </template>
 
@@ -100,11 +111,6 @@
     color: #e2e8f0;
   }
 
-  .agent-text strong {
-    font-weight: 500;
-    color: var(--color-text);
-  }
-
   .typing-indicator {
     display: flex;
     gap: 5px;
@@ -127,59 +133,165 @@
     30% { opacity: 1; transform: translateY(-4px); }
   }
 
-  .live-input-area {
-    width: 100%;
-    margin-top: 24px;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: all 0.5s ease;
+  .msg-follow-up {
+    align-self: flex-end;
+    max-width: 100%;
   }
 
-  .live-input-area.visible {
-    opacity: 1;
-    transform: translateY(0);
+  .follow-up-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
   }
 
-  .live-input-area textarea {
-    width: 100%;
-    background: var(--color-input-bg);
-    border: 1px solid var(--color-input-border);
+  .follow-up-btn {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
     border-radius: 12px;
-    padding: 16px 18px;
-    color: var(--color-text);
-    font-size: 14px;
-    line-height: 1.6;
-    resize: none;
-    height: 56px;
-    outline: none;
+    padding: 12px 18px;
+    color: var(--color-text-secondary);
+    font-family: var(--font-family);
+    font-size: 13px;
+    line-height: 1.4;
+    text-align: right;
+    cursor: pointer;
     transition: all var(--transition-normal);
+    max-width: 340px;
   }
 
-  .live-input-area textarea:focus {
-    border-color: var(--color-input-focus-border);
-    background: var(--color-input-focus-bg);
+  .follow-up-btn:hover {
+    background: var(--color-surface-hover);
+    border-color: var(--color-border-hover);
+    color: var(--color-text);
   }
 
-  .live-input-area textarea::placeholder {
+  .msg-tools {
+    align-self: flex-start;
+    max-width: 100%;
+  }
+
+  .tools-label {
+    font: var(--font-label);
+    text-transform: uppercase;
+    letter-spacing: 2px;
     color: var(--color-text-muted);
+    margin-bottom: 12px;
+  }
+
+  .tools-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+
+  .tool-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+  }
+
+  .tool-badge .tool-icon {
+    font-size: 16px;
+  }
+
+  .tools-footnote {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    font-style: italic;
   }
 
   @media (max-width: 600px) {
     .phase {
       padding-top: 8vh;
     }
+    .follow-up-btn {
+      max-width: 280px;
+    }
   }
 </style>
 
 <script>
-  const AGENT_RESPONSE_1 = "Interesting. Before I help you think through this, I want to ask you something: **what would it look like if this went perfectly?** Not the tasks or the timeline \u2014 the outcome. What\u2019s true about the world after you\u2019ve done this well?";
-  const AGENT_RESPONSE_2 = "Now we're getting somewhere. You didn't start with that clarity \u2014 we got there by thinking together. That's the thing most people miss about working with agents: **the value isn't in the answer, it's in the better question.**";
+  interface ScenarioData {
+    agentOpener: string;
+    followUps: string[];
+    agentCloser: string;
+    tools: Array<{ icon: string; name: string }>;
+  }
+
+  const SCENARIOS: Record<string, ScenarioData> = {
+    standup: {
+      agentOpener: "Let's think about this. Right now, who's doing the work of pulling updates from everyone, figuring out what's stuck, and making sure the right people hear about it?",
+      followUps: [
+        "I am \u2014 it takes me an hour every week",
+        "We have a meeting, but half the time it's unfocused",
+        "Nobody, honestly \u2014 things just fall through the cracks"
+      ],
+      agentCloser: "Here's what I'll do. Every Monday morning, I'll message each person on your team and collect their updates \u2014 what they shipped, what's blocked, what's next. I'll compare it against last week to spot anything slipping. By the time you open your laptop, you'll have a summary that tells you exactly where to focus. If someone hasn't responded, I've already followed up. You just read the brief.",
+      tools: [
+        { icon: "\u{1F4AC}", name: "Slack" },
+        { icon: "\u{1F4C5}", name: "Google Calendar" },
+        { icon: "\u{1F4CB}", name: "Linear" },
+        { icon: "\u2709\uFE0F", name: "Email" }
+      ]
+    },
+    website: {
+      agentOpener: "When something breaks on your site \u2014 or when you need to publish something new \u2014 what does that process look like right now?",
+      followUps: [
+        "I do it myself, and it always takes longer than it should",
+        "I ask a developer, and it sits in their queue",
+        "Things stay broken longer than I'd like to admit"
+      ],
+      agentCloser: "Here's what I'll do. I'll monitor your site continuously \u2014 uptime, broken links, performance. When you write something new, hand it to me and I'll format it, publish it, and make sure it looks right. If something breaks at 2am, I'll fix it before you wake up. You'll get a weekly digest of what changed, what I caught, and what needs your decision.",
+      tools: [
+        { icon: "\u{1F4BB}", name: "GitHub" },
+        { icon: "\u2601\uFE0F", name: "Cloudflare" },
+        { icon: "\u{1F4CA}", name: "Analytics" },
+        { icon: "\u{1F4AC}", name: "Slack" }
+      ]
+    },
+    questions: {
+      agentOpener: "Think about the last ten questions that came in. How many of them were genuinely unique, and how many were variations of the same few themes?",
+      followUps: [
+        "Mostly the same questions, different people asking",
+        "A mix \u2014 some repetitive, some that actually need me",
+        "I'm not sure, they all blend together"
+      ],
+      agentCloser: "Here's what I'll do. I'll learn everything about your program \u2014 the docs, the FAQs, the edge cases you've answered a hundred times. When a question comes in, I'll respond within minutes with the right answer in your tone. If something needs your judgment, I'll flag it with context so you can reply in thirty seconds instead of thirty minutes.",
+      tools: [
+        { icon: "\u2709\uFE0F", name: "Email" },
+        { icon: "\u{1F4AC}", name: "Slack" },
+        { icon: "\u{1F4D3}", name: "Notion" },
+        { icon: "\u{1F465}", name: "CRM" }
+      ]
+    },
+    market: {
+      agentOpener: "How do you stay on top of what's happening in your space right now? News, competitors, trends \u2014 where does that information come from?",
+      followUps: [
+        "I browse Twitter and newsletters when I have time",
+        "My team shares things in Slack, but it's scattered",
+        "I mostly hear about things after they've already happened"
+      ],
+      agentCloser: "Here's what I'll do. I'll track your competitors, your industry, and the topics you tell me matter. Every morning, you'll get a brief \u2014 what changed, what it means for you, and what you might want to act on. Over time, I'll learn what you actually care about and filter harder.",
+      tools: [
+        { icon: "\u{1F4F0}", name: "News APIs" },
+        { icon: "\u{1D54F}", name: "Twitter/X" },
+        { icon: "\u{1F4BC}", name: "LinkedIn" },
+        { icon: "\u{1F4AC}", name: "Slack" },
+        { icon: "\u2709\uFE0F", name: "Email" }
+      ]
+    }
+  };
 
   const conversation = document.getElementById('conversation') as HTMLDivElement;
-  const liveInputArea = document.getElementById('live-input-area') as HTMLDivElement;
-  const liveInput = document.getElementById('live-input') as HTMLTextAreaElement;
-
-  let exchangeCount = 0;
 
   function addUserMsg(text: string): HTMLElement {
     const tpl = (document.getElementById('tpl-user-msg') as HTMLTemplateElement).content.cloneNode(true) as DocumentFragment;
@@ -194,18 +306,7 @@
     const tpl = (document.getElementById('tpl-agent-msg') as HTMLTemplateElement).content.cloneNode(true) as DocumentFragment;
     const el = tpl.querySelector('.msg') as HTMLElement;
     const textEl = el.querySelector('.agent-text') as HTMLElement;
-
-    const parts = text.split(/\*\*(.*?)\*\*/g);
-    for (let i = 0; i < parts.length; i++) {
-      if (i % 2 === 1) {
-        const strong = document.createElement('strong');
-        strong.textContent = parts[i];
-        textEl.appendChild(strong);
-      } else {
-        textEl.appendChild(document.createTextNode(parts[i]));
-      }
-    }
-
+    textEl.textContent = text;
     conversation.appendChild(el);
     requestAnimationFrame(() => el.classList.add('visible'));
     return el;
@@ -219,47 +320,88 @@
     return el;
   }
 
-  function startConversation(userText: string) {
-    addUserMsg(userText);
+  function showFollowUps(options: string[], onSelect: (text: string) => void) {
+    const tpl = (document.getElementById('tpl-follow-up') as HTMLTemplateElement).content.cloneNode(true) as DocumentFragment;
+    const el = tpl.querySelector('.msg') as HTMLElement;
+    const container = el.querySelector('.follow-up-options') as HTMLElement;
+
+    options.forEach((optionText) => {
+      const btn = document.createElement('button');
+      btn.className = 'follow-up-btn';
+      btn.type = 'button';
+      btn.textContent = optionText;
+      btn.addEventListener('click', () => {
+        el.remove();
+        onSelect(optionText);
+      });
+      container.appendChild(btn);
+    });
+
+    conversation.appendChild(el);
+    requestAnimationFrame(() => el.classList.add('visible'));
+    return el;
+  }
+
+  function showTools(tools: Array<{ icon: string; name: string }>) {
+    const tpl = (document.getElementById('tpl-tools') as HTMLTemplateElement).content.cloneNode(true) as DocumentFragment;
+    const el = tpl.querySelector('.msg') as HTMLElement;
+    const row = el.querySelector('.tools-row') as HTMLElement;
+
+    tools.forEach((tool) => {
+      const badge = document.createElement('div');
+      badge.className = 'tool-badge';
+
+      const icon = document.createElement('span');
+      icon.className = 'tool-icon';
+      icon.textContent = tool.icon;
+      badge.appendChild(icon);
+
+      const name = document.createElement('span');
+      name.textContent = tool.name;
+      badge.appendChild(name);
+
+      row.appendChild(badge);
+    });
+
+    conversation.appendChild(el);
+    requestAnimationFrame(() => el.classList.add('visible'));
+    return el;
+  }
+
+  function runScenario(scenarioId: string, userLabel: string) {
+    const data = SCENARIOS[scenarioId];
+    if (!data) return;
+
+    addUserMsg(userLabel);
 
     setTimeout(() => {
-      const typing = showTyping();
+      const typing1 = showTyping();
       setTimeout(() => {
-        typing.remove();
-        addAgentMsg(AGENT_RESPONSE_1);
+        typing1.remove();
+        addAgentMsg(data.agentOpener);
         setTimeout(() => {
-          liveInputArea.classList.add('visible');
-          liveInput.focus();
-        }, 600);
+          showFollowUps(data.followUps, (selectedText) => {
+            addUserMsg(selectedText);
+            setTimeout(() => {
+              const typing2 = showTyping();
+              setTimeout(() => {
+                typing2.remove();
+                addAgentMsg(data.agentCloser);
+                setTimeout(() => {
+                  showTools(data.tools);
+                  setTimeout(() => {
+                    document.dispatchEvent(new CustomEvent('experience:conversation-done'));
+                  }, 3000);
+                }, 800);
+              }, 3000);
+            }, 600);
+          });
+        }, 800);
       }, 2500);
     }, 600);
   }
 
-  liveInput.addEventListener('keydown', (e: KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      const text = liveInput.value.trim();
-      if (!text) return;
-      liveInput.value = '';
-      exchangeCount++;
-      liveInputArea.classList.remove('visible');
-
-      addUserMsg(text);
-
-      setTimeout(() => {
-        const typing = showTyping();
-        setTimeout(() => {
-          typing.remove();
-          addAgentMsg(AGENT_RESPONSE_2);
-          setTimeout(() => {
-            document.dispatchEvent(new CustomEvent('experience:conversation-done'));
-          }, 2000);
-        }, 3000);
-      }, 600);
-    }
-  });
-
   document.addEventListener('experience:submit-hook', ((e: CustomEvent) => {
-    startConversation(e.detail.text);
+    runScenario(e.detail.scenario, e.detail.text);
   }) as EventListener);
 </script>
