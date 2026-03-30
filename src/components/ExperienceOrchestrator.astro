@@ -58,12 +58,16 @@
     const reflect = document.getElementById('phase-reflect');
     if (!reflect) return;
 
-    // Show the reflection, then do a single scroll to center it
+    // Show the reflection, then gently scroll it into view
     reflect.style.display = 'flex';
 
     setTimeout(() => {
       reflect.classList.add('active');
-      reflect.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+      // Gentle scroll: just enough to show the reflection below the conversation
+      const reflectTop = reflect.getBoundingClientRect().top + window.scrollY;
+      const targetScroll = reflectTop - window.innerHeight * 0.55;
+      window.scrollTo({ top: Math.max(0, targetScroll), behavior: 'smooth' });
 
       setTimeout(() => {
         document.dispatchEvent(new CustomEvent('experience:start-reflection'));
