@@ -238,6 +238,87 @@
     font-style: italic;
   }
 
+  .msg-closer {
+    align-self: flex-start;
+    width: 100%;
+  }
+
+  .closer-intro {
+    font: 300 15px/1.7 'Inter', -apple-system, sans-serif;
+    color: #e2e8f0;
+    margin-bottom: 20px;
+  }
+
+  .closer-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .closer-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 16px;
+  }
+
+  .closer-step-icon {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(129, 140, 248, 0.1);
+    border: 1px solid rgba(129, 140, 248, 0.12);
+    border-radius: 10px;
+  }
+
+  .closer-step-icon img {
+    width: 18px;
+    height: 18px;
+    opacity: 0.85;
+    filter: brightness(0) invert(1);
+  }
+
+  .closer-step-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .closer-step-tool {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #818cf8;
+  }
+
+  .closer-step-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #cbd5e1;
+  }
+
+  .closer-outro {
+    font: 300 15px/1.7 'Inter', -apple-system, sans-serif;
+    color: #ffffff;
+    font-weight: 400;
+  }
+
+  .closer-mcp {
+    margin-top: 16px;
+    font-size: 11px;
+    color: var(--color-text-muted);
+    font-style: italic;
+  }
+
   @media (max-width: 600px) {
     .phase {
       padding-top: 8vh;
@@ -249,11 +330,17 @@
 </style>
 
 <script>
+  interface CloserStep {
+    text: string;
+    tool?: { icon: string; name: string };
+  }
+
   interface ScenarioData {
     agentOpener: string;
     followUps: string[];
-    agentCloser: string;
-    tools: Array<{ icon: string; name: string }>;
+    closerIntro: string;
+    closerSteps: CloserStep[];
+    closerOutro: string;
   }
 
   const SCENARIOS: Record<string, ScenarioData> = {
@@ -264,13 +351,14 @@
         "We have a meeting, but half the time it's unfocused",
         "Nobody, honestly \u2014 things just fall through the cracks"
       ],
-      agentCloser: "Here's what I'll do. Every Monday morning, I'll message each person on your team and collect their updates \u2014 what they shipped, what's blocked, what's next. I'll compare it against last week to spot anything slipping. By the time you open your laptop, you'll have a summary that tells you exactly where to focus. If someone hasn't responded, I've already followed up. You just read the brief.",
-      tools: [
-        { icon: "/icons/slack.svg", name: "Slack" },
-        { icon: "/icons/google-calendar.svg", name: "Google Calendar" },
-        { icon: "/icons/linear.svg", name: "Linear" },
-        { icon: "/icons/email.svg", name: "Email" }
-      ]
+      closerIntro: "Here's what I'll do.",
+      closerSteps: [
+        { text: "Every Monday morning, I'll message each person on your team and collect their updates \u2014 what they shipped, what's blocked, what's next.", tool: { icon: "/icons/slack.svg", name: "Slack" } },
+        { text: "I'll check your calendar and flag any conflicts or meetings that need prep.", tool: { icon: "/icons/google-calendar.svg", name: "Google Calendar" } },
+        { text: "I'll pull the latest from your project tracker to spot anything slipping.", tool: { icon: "/icons/linear.svg", name: "Linear" } },
+        { text: "If someone hasn't responded, I'll follow up automatically.", tool: { icon: "/icons/email.svg", name: "Email" } }
+      ],
+      closerOutro: "By the time you open your laptop, you'll have a summary that tells you exactly where to focus. You just read the brief."
     },
     website: {
       agentOpener: "When something breaks on your site \u2014 or when you need to publish something new \u2014 what does that process look like right now?",
@@ -279,13 +367,14 @@
         "I ask a developer, and it sits in their queue",
         "Things stay broken longer than I'd like to admit"
       ],
-      agentCloser: "Here's what I'll do. I'll monitor your site continuously \u2014 uptime, broken links, performance. When you write something new, hand it to me and I'll format it, publish it, and make sure it looks right. If something breaks at 2am, I'll fix it before you wake up. You'll get a weekly digest of what changed, what I caught, and what needs your decision.",
-      tools: [
-        { icon: "/icons/github.svg", name: "GitHub" },
-        { icon: "/icons/cloudflare.svg", name: "Cloudflare" },
-        { icon: "/icons/google-analytics.svg", name: "Analytics" },
-        { icon: "/icons/slack.svg", name: "Slack" }
-      ]
+      closerIntro: "Here's what I'll do.",
+      closerSteps: [
+        { text: "I'll monitor your site continuously \u2014 uptime, broken links, performance.", tool: { icon: "/icons/cloudflare.svg", name: "Cloudflare" } },
+        { text: "When you write something new, hand it to me and I'll format it, publish it, and make sure it looks right.", tool: { icon: "/icons/github.svg", name: "GitHub" } },
+        { text: "I'll track what's working and what isn't so you can make informed decisions.", tool: { icon: "/icons/google-analytics.svg", name: "Analytics" } },
+        { text: "If something breaks at 2am, I'll fix it and let you know in the morning.", tool: { icon: "/icons/slack.svg", name: "Slack" } }
+      ],
+      closerOutro: "You'll get a weekly digest of what changed, what I caught, and what needs your decision."
     },
     questions: {
       agentOpener: "Think about the last ten questions that came in. How many of them were genuinely unique, and how many were variations of the same few themes?",
@@ -294,13 +383,14 @@
         "A mix \u2014 some repetitive, some that actually need me",
         "I'm not sure, they all blend together"
       ],
-      agentCloser: "Here's what I'll do. I'll learn everything about your program \u2014 the docs, the FAQs, the edge cases you've answered a hundred times. When a question comes in, I'll respond within minutes with the right answer in your tone. If something needs your judgment, I'll flag it with context so you can reply in thirty seconds instead of thirty minutes.",
-      tools: [
-        { icon: "/icons/email.svg", name: "Email" },
-        { icon: "/icons/slack.svg", name: "Slack" },
-        { icon: "/icons/notion.svg", name: "Notion" },
-        { icon: "/icons/crm.svg", name: "CRM" }
-      ]
+      closerIntro: "Here's what I'll do.",
+      closerSteps: [
+        { text: "I'll learn everything about your program \u2014 the docs, the FAQs, the edge cases.", tool: { icon: "/icons/notion.svg", name: "Notion" } },
+        { text: "When a question comes in by email, I'll respond within minutes with the right answer in your tone.", tool: { icon: "/icons/email.svg", name: "Email" } },
+        { text: "For questions in Slack, same thing \u2014 fast, accurate, on-brand.", tool: { icon: "/icons/slack.svg", name: "Slack" } },
+        { text: "If something needs your judgment, I'll flag it with context in your CRM so you can reply in thirty seconds.", tool: { icon: "/icons/crm.svg", name: "CRM" } }
+      ],
+      closerOutro: "You'll go from answering every question to only answering the interesting ones."
     },
     market: {
       agentOpener: "How do you stay on top of what's happening in your space right now? News, competitors, trends \u2014 where does that information come from?",
@@ -309,14 +399,14 @@
         "My team shares things in Slack, but it's scattered",
         "I mostly hear about things after they've already happened"
       ],
-      agentCloser: "Here's what I'll do. I'll track your competitors, your industry, and the topics you tell me matter. Every morning, you'll get a brief \u2014 what changed, what it means for you, and what you might want to act on. Over time, I'll learn what you actually care about and filter harder.",
-      tools: [
-        { icon: "/icons/news.svg", name: "News APIs" },
-        { icon: "/icons/x.svg", name: "Twitter/X" },
-        { icon: "/icons/linkedin.svg", name: "LinkedIn" },
-        { icon: "/icons/slack.svg", name: "Slack" },
-        { icon: "/icons/email.svg", name: "Email" }
-      ]
+      closerIntro: "Here's what I'll do.",
+      closerSteps: [
+        { text: "I'll continuously scan industry news and publications for relevant developments.", tool: { icon: "/icons/news.svg", name: "News APIs" } },
+        { text: "I'll track your competitors and key voices on social media.", tool: { icon: "/icons/x.svg", name: "Twitter/X" } },
+        { text: "I'll monitor professional networks for market signals and hiring patterns.", tool: { icon: "/icons/linkedin.svg", name: "LinkedIn" } },
+        { text: "Every morning, I'll post a brief to your team \u2014 what changed and what it means for you.", tool: { icon: "/icons/slack.svg", name: "Slack" } }
+      ],
+      closerOutro: "Over time, I'll learn what you actually care about and filter harder."
     }
   };
 
@@ -382,29 +472,70 @@
     return el;
   }
 
-  function showTools(tools: Array<{ icon: string; name: string }>) {
-    const tpl = (document.getElementById('tpl-tools') as HTMLTemplateElement).content.cloneNode(true) as DocumentFragment;
-    const el = tpl.querySelector('.msg') as HTMLElement;
-    const row = el.querySelector('.tools-row') as HTMLElement;
+  function showCloser(intro: string, steps: CloserStep[], outro: string) {
+    const el = document.createElement('div');
+    el.className = 'msg msg-closer';
 
-    tools.forEach((tool) => {
-      const badge = document.createElement('div');
-      badge.className = 'tool-badge';
+    const label = document.createElement('div');
+    label.className = 'agent-label';
+    label.textContent = 'Agent';
+    el.appendChild(label);
 
-      const icon = document.createElement('img');
-      icon.className = 'tool-icon';
-      icon.src = tool.icon;
-      icon.alt = tool.name;
-      icon.width = 16;
-      icon.height = 16;
-      badge.appendChild(icon);
+    const introEl = document.createElement('div');
+    introEl.className = 'closer-intro';
+    introEl.textContent = intro;
+    el.appendChild(introEl);
 
-      const name = document.createElement('span');
-      name.textContent = tool.name;
-      badge.appendChild(name);
+    const stepsContainer = document.createElement('div');
+    stepsContainer.className = 'closer-steps';
 
-      row.appendChild(badge);
+    steps.forEach((step) => {
+      const stepEl = document.createElement('div');
+      stepEl.className = 'closer-step';
+
+      if (step.tool) {
+        const iconWrap = document.createElement('div');
+        iconWrap.className = 'closer-step-icon';
+        const img = document.createElement('img');
+        img.src = step.tool.icon;
+        img.alt = step.tool.name;
+        img.width = 18;
+        img.height = 18;
+        iconWrap.appendChild(img);
+        stepEl.appendChild(iconWrap);
+
+        const body = document.createElement('div');
+        body.className = 'closer-step-body';
+        const toolLabel = document.createElement('div');
+        toolLabel.className = 'closer-step-tool';
+        toolLabel.textContent = step.tool.name;
+        body.appendChild(toolLabel);
+        const textEl = document.createElement('div');
+        textEl.className = 'closer-step-text';
+        textEl.textContent = step.text;
+        body.appendChild(textEl);
+        stepEl.appendChild(body);
+      } else {
+        const textEl = document.createElement('div');
+        textEl.className = 'closer-step-text';
+        textEl.textContent = step.text;
+        stepEl.appendChild(textEl);
+      }
+
+      stepsContainer.appendChild(stepEl);
     });
+
+    el.appendChild(stepsContainer);
+
+    const outroEl = document.createElement('div');
+    outroEl.className = 'closer-outro';
+    outroEl.textContent = outro;
+    el.appendChild(outroEl);
+
+    const mcpNote = document.createElement('div');
+    mcpNote.className = 'closer-mcp';
+    mcpNote.textContent = 'Connected via MCP \u2014 the open protocol that lets agents use your tools.';
+    el.appendChild(mcpNote);
 
     conversation.appendChild(el);
     requestAnimationFrame(() => el.classList.add('visible'));
@@ -429,13 +560,10 @@
               const typing2 = showTyping();
               setTimeout(() => {
                 typing2.remove();
-                addAgentMsg(data.agentCloser);
+                showCloser(data.closerIntro, data.closerSteps, data.closerOutro);
                 setTimeout(() => {
-                  showTools(data.tools);
-                  setTimeout(() => {
-                    document.dispatchEvent(new CustomEvent('experience:conversation-done'));
-                  }, 3000);
-                }, 800);
+                  document.dispatchEvent(new CustomEvent('experience:conversation-done'));
+                }, 3000);
               }, 3000);
             }, 600);
           });
