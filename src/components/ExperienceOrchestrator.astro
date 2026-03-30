@@ -53,9 +53,23 @@
     transitionPhase('phase-hook', 'phase-live');
   });
 
-  // Live -> Reflect
+  // Live -> Reflect: keep conversation visible, show reflection below
   document.addEventListener('experience:conversation-done', () => {
-    transitionPhase('phase-live', 'phase-reflect');
+    const reflect = document.getElementById('phase-reflect');
+    if (!reflect) return;
+
+    // Remove the phase positioning so it flows naturally below the conversation
+    reflect.style.display = 'flex';
+    reflect.style.minHeight = 'auto';
+    reflect.style.paddingTop = '80px';
+    reflect.style.paddingBottom = '80px';
+
+    // Scroll the reflection into view smoothly
+    setTimeout(() => {
+      reflect.classList.add('active');
+      reflect.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
+
     setTimeout(() => {
       document.dispatchEvent(new CustomEvent('experience:start-reflection'));
     }, 800);
@@ -63,7 +77,29 @@
 
   // Reflect -> Resources
   document.addEventListener('experience:explore', () => {
-    transitionPhase('phase-reflect', 'phase-resources');
+    // Hide both conversation and reflection, show resources
+    const live = document.getElementById('phase-live');
+    const reflect = document.getElementById('phase-reflect');
+    const resources = document.getElementById('phase-resources');
+
+    if (live) {
+      live.classList.remove('active');
+      live.classList.add('exit');
+    }
+    if (reflect) {
+      reflect.classList.remove('active');
+      reflect.classList.add('exit');
+    }
+
+    setTimeout(() => {
+      if (live) live.style.display = 'none';
+      if (reflect) reflect.style.display = 'none';
+      if (resources) {
+        resources.style.display = 'flex';
+        window.scrollTo({ top: 0, behavior: 'instant' });
+        requestAnimationFrame(() => resources.classList.add('active'));
+      }
+    }, 400);
   });
 
   // Skip directly to resources
