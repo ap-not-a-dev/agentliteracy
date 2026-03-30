@@ -1,22 +1,32 @@
 <section id="phase-hook" class="phase active" data-phase="hook">
-  <h1>You're about to work with an agent.<br><span class="bold">Let's do something real.</span></h1>
-  <p class="subtext">Pick a job you'd hand to an agent.</p>
+  <div class="hook-content">
+    <h1>You're about to work with an agent.<br><span class="bold">Let's do something real.</span></h1>
+    <p class="subtext">Pick a job you'd hand to an agent.</p>
+  </div>
   <div class="options">
     <button class="option-card" data-scenario="standup" type="button">
-      <span class="option-icon">🔄</span>
-      <span class="option-text">Run my team's weekly standup</span>
+      <div class="option-icon-wrap">
+        <img src="/icons/refresh-cycle.svg" alt="" width="24" height="24" class="option-icon" />
+      </div>
+      <div class="option-label">Run my team's weekly standup</div>
     </button>
     <button class="option-card" data-scenario="website" type="button">
-      <span class="option-icon">🌐</span>
-      <span class="option-text">Keep my website updated and running</span>
+      <div class="option-icon-wrap">
+        <img src="/icons/globe-code.svg" alt="" width="24" height="24" class="option-icon" />
+      </div>
+      <div class="option-label">Keep my website updated and running</div>
     </button>
     <button class="option-card" data-scenario="questions" type="button">
-      <span class="option-icon">💬</span>
-      <span class="option-text">Handle incoming questions about my program</span>
+      <div class="option-icon-wrap">
+        <img src="/icons/message-circle.svg" alt="" width="24" height="24" class="option-icon" />
+      </div>
+      <div class="option-label">Handle incoming questions about my program</div>
     </button>
     <button class="option-card" data-scenario="market" type="button">
-      <span class="option-icon">📡</span>
-      <span class="option-text">Monitor my market and tell me what matters</span>
+      <div class="option-icon-wrap">
+        <img src="/icons/radar.svg" alt="" width="24" height="24" class="option-icon" />
+      </div>
+      <div class="option-label">Monitor my market and tell me what matters</div>
     </button>
   </div>
 </section>
@@ -28,7 +38,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 40px;
+    gap: 48px;
     padding: 40px 24px;
     opacity: 0;
     transform: translateY(30px);
@@ -50,11 +60,18 @@
     pointer-events: none;
   }
 
+  .hook-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
   h1 {
     font: var(--font-hero);
     letter-spacing: -0.5px;
     text-align: center;
-    max-width: 500px;
+    max-width: 520px;
   }
 
   .bold {
@@ -65,50 +82,76 @@
     font-size: 15px;
     color: var(--color-text-dim);
     text-align: center;
-    max-width: 400px;
   }
 
   .options {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    max-width: 560px;
+    gap: 14px;
+    max-width: 600px;
     width: 100%;
   }
 
   .option-card {
     display: flex;
-    align-items: center;
-    gap: 12px;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 12px;
-    padding: 20px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 24px;
     color: var(--color-text-secondary);
-    font-size: 14px;
-    line-height: 1.4;
     text-align: left;
     transition: all var(--transition-normal);
     cursor: pointer;
   }
 
   .option-card:hover {
-    background: var(--color-surface-hover);
-    border-color: var(--color-border-hover);
-    transform: translateY(-2px);
-    color: var(--color-text);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(129, 140, 248, 0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  .option-icon-wrap {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(129, 140, 248, 0.1);
+    border: 1px solid rgba(129, 140, 248, 0.15);
+    border-radius: 12px;
   }
 
   .option-icon {
-    font-size: 24px;
-    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    filter: brightness(0) invert(1);
+    opacity: 0.9;
   }
 
-  .option-text {
+  .option-card:hover .option-icon-wrap {
+    background: rgba(129, 140, 248, 0.15);
+    border-color: rgba(129, 140, 248, 0.25);
+  }
+
+  .option-label {
+    font-size: 15px;
     font-weight: 500;
+    line-height: 1.5;
+    color: #e2e8f0;
+  }
+
+  .option-card:hover .option-label {
+    color: var(--color-text);
   }
 
   @media (max-width: 600px) {
+    .phase {
+      gap: 40px;
+    }
     h1 {
       font-size: 24px;
     }
@@ -117,6 +160,25 @@
     }
     .options {
       grid-template-columns: 1fr;
+      max-width: 400px;
+    }
+    .option-card {
+      flex-direction: row;
+      align-items: center;
+      padding: 18px 20px;
+      gap: 14px;
+    }
+    .option-icon-wrap {
+      width: 40px;
+      height: 40px;
+      flex-shrink: 0;
+    }
+    .option-icon {
+      width: 20px;
+      height: 20px;
+    }
+    .option-label {
+      font-size: 14px;
     }
   }
 </style>
@@ -127,7 +189,7 @@
   optionCards.forEach((card) => {
     card.addEventListener('click', () => {
       const scenario = (card as HTMLElement).dataset.scenario;
-      const text = card.querySelector('.option-text')?.textContent || '';
+      const text = card.querySelector('.option-label')?.textContent || '';
       document.dispatchEvent(new CustomEvent('experience:submit-hook', {
         detail: { scenario, text }
       }));
