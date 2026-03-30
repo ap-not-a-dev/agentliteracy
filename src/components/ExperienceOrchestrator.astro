@@ -61,10 +61,17 @@
     // Show reflection flowing below the conversation
     reflect.style.display = 'flex';
 
-    // Scroll the reflection into view smoothly
+    // Scroll so the last agent message is at the top, reflection visible below
     setTimeout(() => {
-      reflect.classList.add('active');
-      reflect.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // Find the last msg-tools element (MCP badges) in the conversation
+      const toolsMsgs = document.querySelectorAll('.msg-tools');
+      const lastTools = toolsMsgs[toolsMsgs.length - 1];
+      const scrollTarget = lastTools || reflect;
+      scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      setTimeout(() => {
+        reflect.classList.add('active');
+      }, 600);
     }, 100);
 
     setTimeout(() => {
