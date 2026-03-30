@@ -63,10 +63,10 @@
 
     // Scroll so the last agent message is at the top, reflection visible below
     setTimeout(() => {
-      // Find the last msg-tools element (MCP badges) in the conversation
-      const toolsMsgs = document.querySelectorAll('.msg-tools');
-      const lastTools = toolsMsgs[toolsMsgs.length - 1];
-      const scrollTarget = lastTools || reflect;
+      // Find the last agent message (the "I will" closer) to scroll to top
+      const agentMsgs = document.querySelectorAll('.msg-agent');
+      const lastAgent = agentMsgs[agentMsgs.length - 1];
+      const scrollTarget = lastAgent || reflect;
       scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
       setTimeout(() => {
