@@ -58,11 +58,8 @@
     const reflect = document.getElementById('phase-reflect');
     if (!reflect) return;
 
-    // Remove the phase positioning so it flows naturally below the conversation
+    // Show reflection flowing below the conversation
     reflect.style.display = 'flex';
-    reflect.style.minHeight = 'auto';
-    reflect.style.paddingTop = '80px';
-    reflect.style.paddingBottom = '80px';
 
     // Scroll the reflection into view smoothly
     setTimeout(() => {
