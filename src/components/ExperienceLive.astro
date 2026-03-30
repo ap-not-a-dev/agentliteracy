@@ -141,29 +141,30 @@
   .follow-up-options {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
     align-items: flex-end;
   }
 
   .follow-up-btn {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 12px;
-    padding: 12px 18px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px 16px 4px 16px;
+    padding: 14px 20px;
     color: var(--color-text-secondary);
     font-family: var(--font-family);
-    font-size: 13px;
-    line-height: 1.4;
+    font-size: 14px;
+    line-height: 1.5;
     text-align: right;
     cursor: pointer;
     transition: all var(--transition-normal);
-    max-width: 340px;
+    max-width: 380px;
   }
 
   .follow-up-btn:hover {
-    background: var(--color-surface-hover);
-    border-color: var(--color-border-hover);
+    background: rgba(129, 140, 248, 0.1);
+    border-color: rgba(129, 140, 248, 0.3);
     color: var(--color-text);
+    transform: translateY(-1px);
   }
 
   .msg-tools {
@@ -189,20 +190,20 @@
   .tool-badge {
     display: flex;
     align-items: center;
-    gap: 6px;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    padding: 8px 12px;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 10px 14px;
     font-size: 12px;
     font-weight: 500;
     color: var(--color-text-secondary);
   }
 
   .tool-badge .tool-icon {
-    width: 16px;
-    height: 16px;
-    opacity: 0.8;
+    width: 18px;
+    height: 18px;
+    opacity: 0.85;
     filter: brightness(0) invert(1);
   }
 
