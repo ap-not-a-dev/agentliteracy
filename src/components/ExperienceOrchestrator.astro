@@ -64,10 +64,13 @@
     setTimeout(() => {
       reflect.classList.add('active');
 
-      // Gentle scroll: just enough to show the reflection below the conversation
-      const reflectTop = reflect.getBoundingClientRect().top + window.scrollY;
-      const targetScroll = reflectTop - window.innerHeight * 0.55;
-      window.scrollTo({ top: Math.max(0, targetScroll), behavior: 'smooth' });
+      // Scroll the closer message to the top of the viewport
+      const closerMsgs = document.querySelectorAll('.msg-closer');
+      const closer = closerMsgs[closerMsgs.length - 1];
+      if (closer) {
+        const closerTop = closer.getBoundingClientRect().top + window.scrollY - 40;
+        window.scrollTo({ top: Math.max(0, closerTop), behavior: 'smooth' });
+      }
 
       setTimeout(() => {
         document.dispatchEvent(new CustomEvent('experience:start-reflection'));
