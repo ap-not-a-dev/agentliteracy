@@ -58,29 +58,17 @@
     const reflect = document.getElementById('phase-reflect');
     if (!reflect) return;
 
-    // Find the closer message to scroll to
-    const closerMsgs = document.querySelectorAll('.msg-closer');
-    const closer = closerMsgs[closerMsgs.length - 1];
-    const scrollTarget = closer || reflect;
+    // Show the reflection, then do a single scroll to center it
+    reflect.style.display = 'flex';
 
-    // First scroll the closer to the top of the viewport
-    scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-    // After scroll settles, reveal the reflection below
     setTimeout(() => {
-      reflect.style.display = 'flex';
-      requestAnimationFrame(() => {
-        reflect.classList.add('active');
-        // Now scroll again so the reflection is visible
-        setTimeout(() => {
-          reflect.scrollIntoView({ behavior: 'smooth', block: 'end' });
-        }, 200);
-      });
+      reflect.classList.add('active');
+      reflect.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
       setTimeout(() => {
         document.dispatchEvent(new CustomEvent('experience:start-reflection'));
       }, 400);
-    }, 1200);
+    }, 300);
   });
 
   // Reflect -> Resources
