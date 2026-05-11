@@ -15,6 +15,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
     <header class="hero">
       <h1 class="hero-title">Most "AI Agents"<br>Aren't</h1>
       <p class="hero-subtitle">And that's fine. But knowing which one you're building changes how you should build it.</p>
+      <div class="hero-meta">AP · May 11, 2026</div>
       <div class="hero-line"></div>
     </header>
 
@@ -332,6 +333,12 @@ import BaseLayout from '@layouts/BaseLayout.astro';
     color: var(--color-text-dim);
     line-height: 1.6;
     max-width: 520px;
+  }
+
+  .hero-meta {
+    font-size: 13px;
+    color: var(--color-text-muted);
+    margin-top: 20px;
   }
 
   .hero-line {
