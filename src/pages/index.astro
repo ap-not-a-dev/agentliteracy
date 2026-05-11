@@ -16,7 +16,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
     <header class="hero">
       <h1 class="hero-title">Most "AI Agents"<br>Aren't</h1>
       <p class="hero-subtitle">And that's fine. But knowing which one you're building changes how you should build it.</p>
-      <div class="hero-meta">AP · May 11, 2026</div>
+      <div class="hero-meta"><span class="draft-tag">Draft</span> AP · May 11, 2026</div>
       <div class="hero-line"></div>
     </header>
 
@@ -51,20 +51,20 @@ import BaseLayout from '@layouts/BaseLayout.astro';
       <div class="fork-question">The design decision that matters</div>
       <div class="fork-prompt">Who controls the path?</div>
       <div class="fork-branches">
-        <button class="fork-branch" data-branch="system" type="button">
-          <div class="fork-branch-label">The system</div>
-          <div class="fork-branch-desc">Workflow is defined in advance. Data sources are known. Output destinations are fixed. The LLM adds variance at specific steps, contained within a deterministic frame.</div>
-          <div class="fork-branch-result">You're building an <strong>automation</strong>.</div>
+        <button class="fork-branch" data-branch="ai" type="button">
+          <div class="fork-branch-label">The AI</div>
+          <div class="fork-branch-desc">It decides what to do next, which tools to use, what counts as a relevant input, when to act, when to wait. You inherit context rot, tool failures, eval blindness, observability gaps, and nondeterminism from day one.</div>
+          <div class="fork-branch-result">You're building an <strong>agent</strong>.</div>
         </button>
         <div class="fork-divider">
           <div class="fork-line"></div>
           <span class="fork-or">or</span>
           <div class="fork-line"></div>
         </div>
-        <button class="fork-branch" data-branch="ai" type="button">
-          <div class="fork-branch-label">The AI</div>
-          <div class="fork-branch-desc">It decides what to do next, which tools to use, what counts as a relevant input, when to act, when to wait. You inherit context rot, tool failures, eval blindness, observability gaps, and nondeterminism from day one.</div>
-          <div class="fork-branch-result">You're building an <strong>agent</strong>.</div>
+        <button class="fork-branch" data-branch="system" type="button">
+          <div class="fork-branch-label">The system</div>
+          <div class="fork-branch-desc">Workflow is defined in advance. Data sources are known. Output destinations are fixed. The LLM adds variance at specific steps, contained within a deterministic frame.</div>
+          <div class="fork-branch-result">You're building an <strong>automation</strong>.</div>
         </button>
       </div>
     </div>
@@ -352,6 +352,20 @@ import BaseLayout from '@layouts/BaseLayout.astro';
     font-size: 13px;
     color: var(--color-text-muted);
     margin-top: 20px;
+  }
+
+  .draft-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--color-accent);
+    border: 1px solid rgba(129, 140, 248, 0.3);
+    border-radius: 4px;
+    padding: 2px 8px;
+    margin-right: 8px;
+    vertical-align: 1px;
   }
 
   .hero-line {
