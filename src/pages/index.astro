@@ -1,17 +1,933 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
-import ExperienceOrchestrator from '@components/ExperienceOrchestrator.astro';
-import ExperienceHook from '@components/ExperienceHook.astro';
-import ExperienceLive from '@components/ExperienceLive.astro';
-import ExperienceReflect from '@components/ExperienceReflect.astro';
-import ResourceLibrary from '@components/ResourceLibrary.astro';
 ---
 
-<BaseLayout title="Agent Literacy — Learn to work with AI agents">
-  <ExperienceOrchestrator>
-    <ExperienceHook />
-    <ExperienceLive />
-    <ExperienceReflect />
-    <ResourceLibrary isPhase4={true} />
-  </ExperienceOrchestrator>
+<BaseLayout title="Agent Literacy — Most 'AI Agents' Aren't" description="A guide to understanding the difference between AI-powered automations and real AI agents, with practical tips for building both.">
+  <nav class="site-nav">
+    <a href="/" class="wordmark">Agent Literacy</a>
+    <div class="nav-links">
+      <a href="/about" class="nav-link">About</a>
+      <a href="/contact" class="nav-link">Contact</a>
+    </div>
+  </nav>
+
+  <article class="article-page">
+    <header class="hero">
+      <h1 class="hero-title">Most "AI Agents"<br>Aren't</h1>
+      <p class="hero-subtitle">And that's fine. But knowing which one you're building changes how you should build it.</p>
+      <div class="hero-line"></div>
+    </header>
+
+    <div class="prose">
+      <p>For the last two weeks, people at my company have been building AI agents. Or at least, that's what they've been calling them. People across sales, engineering, data, finance, and operations, all given the same tools and the same mandate: build something useful with AI.</p>
+
+      <p>The vast majority of them built automations and called them agents. Not because they were confused, but because the vocabulary doesn't exist yet to help them see the difference. And the difference matters. The two things have different failure modes, different costs, and different ceilings.</p>
+
+      <h2>What People Actually Built</h2>
+
+      <p>The same pattern showed up over and over. A trigger (daily cron, a Slack mention, a manual invocation) kicks off a sequence: pull data from predetermined sources, run it through an LLM for synthesis or classification, post the output to a predetermined destination. A daily sales briefing that scans call transcripts and emails a summary. A doc updater that polls merged PRs three times a day. A contract review tool that classifies redlines and generates talk tracks.</p>
+
+      <p>Useful stuff. Some of them save 5-10 hours a week. But they're automations with an AI step, not agents. Remove the trigger and they stop existing. They don't decide what to do next. They do what they were told to do, in the order they were told to do it, and the LLM makes one of those steps smarter than a regex or a rule engine would have.</p>
+
+      <p>A handful were different. A fleet manager that routes requests across specialist agents and makes its own decisions about access control. An engineering assistant that takes a ticket queue at 4:30 PM and, by morning, has investigated each issue, chosen an approach, written code, and opened draft PRs with passing CI. An onboarding coach that stays with a new hire for 90 days, adjusting what it teaches based on where the person struggles.</p>
+
+      <p>These aren't fancier or more complex. They hold a goal. If you removed their triggers, they'd still know what they were supposed to be doing.</p>
+
+      <h2>Triggers vs. Inception Points</h2>
+
+      <p>The clearest way I can draw the line: an automation has a trigger, an agent has an inception point.</p>
+
+      <p>A trigger is an external event that activates a dormant system. A cron tick, a webhook, a new row in a table. The system runs its steps and goes back to sleep. Trigger, execute, done.</p>
+
+      <p>An inception point is closer to hiring someone. You give them context about what they're responsible for, and they're on. They might watch for events, but that's a choice they're making in service of their goal, not a trigger that defines their existence.</p>
+
+      <p>Nobody sends you a webhook every morning that says "be a PM now." You wake up already holding your responsibilities. You decide what to pay attention to, what to ignore, when to act, when to wait. What counts as a meaningful signal is your call.</p>
+    </div>
+
+    <!-- Interactive: The Fork diagram -->
+    <div class="fork-diagram">
+      <div class="fork-question">The design decision that matters</div>
+      <div class="fork-prompt">Who controls the path?</div>
+      <div class="fork-branches">
+        <button class="fork-branch" data-branch="system" type="button">
+          <div class="fork-branch-label">The system</div>
+          <div class="fork-branch-desc">Workflow is defined in advance. Data sources are known. Output destinations are fixed. The LLM adds variance at specific steps, contained within a deterministic frame.</div>
+          <div class="fork-branch-result">You're building an <strong>automation</strong>.</div>
+        </button>
+        <div class="fork-divider">
+          <div class="fork-line"></div>
+          <span class="fork-or">or</span>
+          <div class="fork-line"></div>
+        </div>
+        <button class="fork-branch" data-branch="ai" type="button">
+          <div class="fork-branch-label">The AI</div>
+          <div class="fork-branch-desc">It decides what to do next, which tools to use, what counts as a relevant input, when to act, when to wait. You inherit context rot, tool failures, eval blindness, observability gaps, and nondeterminism from day one.</div>
+          <div class="fork-branch-result">You're building an <strong>agent</strong>.</div>
+        </button>
+      </div>
+    </div>
+
+    <div class="prose">
+      <p>The industry calls this a spectrum. I think that's descriptively true and practically useless. It hides the fork. At some point in your design, you make this choice, and everything downstream follows from it.</p>
+    </div>
+
+    <!-- Interactive: The three-question diagnostic -->
+    <div class="diagnostic" id="diagnostic">
+      <div class="diagnostic-header">
+        <h2>Test what you're building</h2>
+        <p>Answer three questions about the system you're working on.</p>
+      </div>
+
+      <div class="diagnostic-questions">
+        <div class="dq" data-question="1">
+          <div class="dq-number">1</div>
+          <div class="dq-content">
+            <div class="dq-text">Does it hold a goal that persists beyond any single execution?</div>
+            <div class="dq-sub">An automation runs and finishes. An agent is on. It has a responsibility, not just a task.</div>
+            <div class="dq-buttons">
+              <button class="dq-btn" data-answer="yes" type="button">Yes</button>
+              <button class="dq-btn" data-answer="no" type="button">No</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="dq" data-question="2">
+          <div class="dq-number">2</div>
+          <div class="dq-content">
+            <div class="dq-text">Does it decide its own path?</div>
+            <div class="dq-sub">Not "does it use an LLM" but does it choose which tools to call, which sources to check, which actions to take?</div>
+            <div class="dq-buttons">
+              <button class="dq-btn" data-answer="yes" type="button">Yes</button>
+              <button class="dq-btn" data-answer="no" type="button">No</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="dq" data-question="3">
+          <div class="dq-number">3</div>
+          <div class="dq-content">
+            <div class="dq-text">Would it survive a trigger swap?</div>
+            <div class="dq-sub">If you replaced the cron schedule with a Slack mention, would the system still understand its purpose? Or would it break because the trigger <em>is</em> the system?</div>
+            <div class="dq-buttons">
+              <button class="dq-btn" data-answer="yes" type="button">Yes</button>
+              <button class="dq-btn" data-answer="no" type="button">No</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="diagnostic-result" id="result-agent" hidden>
+        <span class="result-label">Result</span>
+        <p><strong>You're building an agent.</strong> Your system holds a goal, decides its own path, and would survive a trigger swap. That means you need goal specification, trust calibration, failure instrumentation, and UX designed for inconsistency. The tips below cover what to do next.</p>
+      </div>
+      <div class="diagnostic-result" id="result-automation" hidden>
+        <span class="result-label">Result</span>
+        <p><strong>You're building an automation.</strong> Your system follows a fixed path, runs when triggered, and the LLM makes specific steps smarter. That's valuable. Keep the AI contained, make everything else deterministic, and monitor it like any other integration. The tips below cover the details.</p>
+      </div>
+      <div class="diagnostic-result" id="result-mostly-automation" hidden>
+        <span class="result-label">Result</span>
+        <p><strong>You're mostly building an automation</strong> with one agent-like quality. That's common and usually fine. Build it as an automation first. If you keep hitting cases where the system needs more latitude, that's when to consider the architectural shift.</p>
+      </div>
+      <div class="diagnostic-result" id="result-middle" hidden>
+        <span class="result-label">Result</span>
+        <p><strong>You're in the middle.</strong> Your system has agent-like qualities but isn't fully autonomous. This is where most interesting systems land. Be deliberate about which parts are deterministic and which parts the AI controls. Read both sets of tips below.</p>
+      </div>
+    </div>
+
+    <div class="prose">
+      <p>Most "AI agents" in production today fail all three. And that's fine. A well-built automation that saves five hours a week is worth more than a conceptually pure agent that breaks in production. But knowing which one you're building changes how you should build it.</p>
+    </div>
+
+    <!-- Interactive: Tabbed tips sections -->
+    <div class="tips-section" id="tips-section">
+      <div class="tips-tabs">
+        <button class="tips-tab active" data-tab="agent" type="button">Building an agent</button>
+        <button class="tips-tab" data-tab="automation" type="button">Building an automation</button>
+      </div>
+
+      <div class="tips-panel" id="panel-automation">
+        <div class="tip">
+          <div class="tip-number">01</div>
+          <div class="tip-content">
+            <div class="tip-title">Keep the LLM step contained</div>
+            <p>Define exactly what goes in and what comes out. Use structured output (JSON, typed schemas) so the rest of your workflow doesn't have to parse free text. The fewer decisions the LLM makes, the more predictable your system is.</p>
+          </div>
+        </div>
+        <div class="tip">
+          <div class="tip-number">02</div>
+          <div class="tip-content">
+            <div class="tip-title">Make everything around the LLM deterministic</div>
+            <p>The data pull, the routing, the output destination, the error handling: all regular code. If your LLM step fails or returns garbage, the system should know what to do without asking the LLM for help.</p>
+          </div>
+        </div>
+        <div class="tip">
+          <div class="tip-number">03</div>
+          <div class="tip-content">
+            <div class="tip-title">Monitor it like any other integration</div>
+            <p>Track latency, failure rate, and output shape. You don't need agent-grade observability. You need the same monitoring you'd put on a third-party API call, because that's what it is.</p>
+          </div>
+        </div>
+        <div class="tip">
+          <div class="tip-number">04</div>
+          <div class="tip-content">
+            <div class="tip-title">Use evals, but keep them simple</div>
+            <p>Pick 20-30 representative inputs, run them through the LLM step, and check whether the outputs are acceptable. Do this before every prompt change or model upgrade. A spreadsheet works.</p>
+          </div>
+        </div>
+        <div class="tip">
+          <div class="tip-number">05</div>
+          <div class="tip-content">
+            <div class="tip-title">Resist the urge to add more AI</div>
+            <p>When the automation doesn't handle an edge case, the instinct is to add another LLM step. Usually the better answer is a conditional branch or a validation rule. Every LLM step you add multiplies your variance.</p>
+          </div>
+        </div>
+        <div class="tip">
+          <div class="tip-number">06</div>
+          <div class="tip-content">
+            <div class="tip-title">Know when you're outgrowing automation</div>
+            <p>If you keep adding LLM steps to handle cases the workflow can't predict, or if you want the system to "figure out" what to do, you're building toward an agent. That's a different architecture, not a bigger automation. Recognize the fork.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="tips-panel active" id="panel-agent">
+        <div class="tip">
+          <div class="tip-number">01</div>
+          <div class="tip-content">
+            <div class="tip-title">Start with the goal, not the tools</div>
+            <p>Before you connect a single API, write down what the agent is responsible for and what "done well" looks like. The engineering ticket assistant's goal isn't "use GitHub and Jira." It's "turn this ticket queue into draft PRs that a human can review by morning."</p>
+          </div>
+        </div>
+        <div class="tip">
+          <div class="tip-number">02</div>
+          <div class="tip-content">
+            <div class="tip-title">Define what the agent should refuse</div>
+            <p>Boundaries matter more than capabilities. What data should it not access? What actions need human approval? What's out of scope? The fleet manager builder said the hardest problem wasn't routing, it was access-permission design. Start there.</p>
+          </div>
+        </div>
+        <div class="tip">
+          <div class="tip-number">03</div>
+          <div class="tip-content">
+            <div class="tip-title">Graduate trust deliberately</div>
+            <p>Start with the agent proposing actions and a human approving every one. Once you've seen enough good proposals, let it execute certain categories autonomously and escalate others. Don't skip this step because it feels slow.</p>
+          </div>
+        </div>
+        <div class="tip">
+          <div class="tip-number">04</div>
+          <div class="tip-content">
+            <div class="tip-title">Instrument for failure from day one</div>
+            <p>Context rot, tool failures, eval blindness, observability gaps, nondeterminism. You will hit all five. Build the instrumentation before you need it, not after users tell you something is broken.</p>
+          </div>
+        </div>
+        <div class="tip">
+          <div class="tip-number">05</div>
+          <div class="tip-content">
+            <div class="tip-title">Design your UX around inconsistency</div>
+            <p>The agent will give different answers to the same question on different days. That's not a bug you can fix. Show confidence levels. Let users see the reasoning. Make it easy to ask "why did you do that?"</p>
+          </div>
+        </div>
+        <div class="tip">
+          <div class="tip-number">06</div>
+          <div class="tip-content">
+            <div class="tip-title">Treat the agent's judgment as a first draft</div>
+            <p>The best agent systems pair AI judgment with human review. The contract review agent doesn't approve deals. It proposes a classification and a talk track, and a person decides. As the agent proves itself, you widen the aperture. But you never stop checking.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prose">
+      <h2>Why This Isn't Just Semantics</h2>
+
+      <p>A fair question at this point: if the job gets done, who cares what you call it? If the daily briefing saves five hours a week, does it matter whether it's technically an "agent" or an "automation"?</p>
+
+      <p>I don't think this is just vocabulary polishing. Two real things are at stake.</p>
+
+      <p>The first is that people should be able to speak clearly about what they're building. When everyone calls everything an agent, the word loses meaning, and it gets harder to have useful conversations about architecture, production readiness, or what to build next. If you can't name the thing you're building, you can't reason about its tradeoffs.</p>
+
+      <p>The second is more practical and it's the one I keep seeing: people are applying AI to steps in their process that are objective, structured, and deterministic, and then spending hours troubleshooting the unpredictability they introduced.</p>
+
+      <p>Someone told me the other day that they asked their agent to only message them on Mondays and Fridays. It messaged them on a Wednesday. That's not an agent problem. That's a scheduling rule. "Send on Monday and Friday" is a deterministic constraint, and it should be handled by deterministic code, not by an LLM that's interpreting the instruction from a system prompt each time it runs. A cron job will never message you on Wednesday. An LLM might, because it's probabilistic, and "only on Mondays and Fridays" is just another string in its context window.</p>
+
+      <p>This pattern comes up constantly. People embed objective constraints inside agent prompts, and when the agent violates them, they try to fix it with more prompt engineering. But the fix isn't a better prompt. The fix is moving that constraint out of the LLM and into code. Let the AI handle the parts that actually need interpretation. Let code handle the parts that don't.</p>
+
+      <p>That's the practical reason this distinction matters. It's not about naming things correctly for the sake of it. It's about putting AI where it helps and keeping it out of places where a simple conditional would be more reliable.</p>
+    </div>
+
+    <footer class="article-footer">
+      <div class="prose closing">
+        <p>The first step is being honest about what you're building. Not every LLM-powered system is an agent. Not every automation needs to become one. And the difference between the two is not a spectrum. It's a design decision with real consequences.</p>
+      </div>
+      <a href="/about" class="footer-cta">About Agent Literacy &rarr;</a>
+    </footer>
+  </article>
+
+  <footer class="site-footer">
+    <span class="footer-wordmark">Agent Literacy</span>
+    <div class="footer-links">
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+    </div>
+  </footer>
 </BaseLayout>
+
+<style>
+  /* Nav */
+  .site-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 32px;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .wordmark {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+    color: var(--color-text);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 24px;
+  }
+
+  .nav-link {
+    color: var(--color-text-muted);
+    font-size: 13px;
+    font-weight: 500;
+    transition: color var(--transition-fast);
+  }
+
+  .nav-link:hover {
+    color: var(--color-text);
+  }
+
+  /* Article */
+  .article-page {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 24px 100px;
+  }
+
+  /* Hero */
+  .hero {
+    padding: 10vh 0 56px;
+    text-align: left;
+  }
+
+  .hero-title {
+    font-size: 48px;
+    font-weight: 300;
+    line-height: 1.15;
+    letter-spacing: -1.5px;
+    margin-bottom: 20px;
+  }
+
+  .hero-subtitle {
+    font-size: 18px;
+    font-weight: 300;
+    color: var(--color-text-dim);
+    line-height: 1.6;
+    max-width: 520px;
+  }
+
+  .hero-line {
+    width: 48px;
+    height: 1px;
+    background: var(--color-accent);
+    margin-top: 40px;
+    opacity: 0.5;
+  }
+
+  /* Prose */
+  .prose {
+    font: var(--font-body);
+    color: var(--color-text-secondary);
+  }
+
+  .prose h2 {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-top: 56px;
+    margin-bottom: 20px;
+    letter-spacing: -0.3px;
+  }
+
+  .prose p {
+    margin-bottom: 20px;
+    line-height: 1.8;
+    font-size: 15px;
+  }
+
+  .prose strong {
+    font-weight: 500;
+    color: var(--color-text);
+  }
+
+  .prose em {
+    font-style: italic;
+  }
+
+  /* Fork Diagram */
+  .fork-diagram {
+    margin: 56px 0;
+    padding: 40px 32px;
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    background: var(--color-surface);
+  }
+
+  .fork-question {
+    font: var(--font-label);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--color-accent);
+    margin-bottom: 12px;
+  }
+
+  .fork-prompt {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--color-text);
+    margin-bottom: 32px;
+  }
+
+  .fork-branches {
+    display: flex;
+    gap: 0;
+    align-items: stretch;
+  }
+
+  .fork-branch {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 28px 24px;
+    text-align: left;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    color: var(--color-text-secondary);
+  }
+
+  .fork-branch:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: var(--color-border-hover);
+    transform: translateY(-2px);
+  }
+
+  .fork-branch.selected {
+    border-color: var(--color-accent);
+    background: rgba(129, 140, 248, 0.06);
+  }
+
+  .fork-branch-label {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .fork-branch-desc {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--color-text-dim);
+  }
+
+  .fork-branch-result {
+    font-size: 14px;
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+  }
+
+  .fork-branch.selected .fork-branch-result {
+    opacity: 1;
+  }
+
+  .fork-divider {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 20px;
+    flex-shrink: 0;
+  }
+
+  .fork-line {
+    width: 1px;
+    flex: 1;
+    background: var(--color-border);
+  }
+
+  .fork-or {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+
+  /* Diagnostic */
+  .diagnostic {
+    margin: 56px 0;
+    padding: 40px 32px;
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    background: var(--color-surface);
+  }
+
+  .diagnostic-header {
+    margin-bottom: 36px;
+  }
+
+  .diagnostic-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 8px;
+  }
+
+  .diagnostic-header p {
+    font-size: 14px;
+    color: var(--color-text-dim);
+  }
+
+  .diagnostic-questions {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .dq {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+
+  .dq-number {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text-dim);
+    flex-shrink: 0;
+    margin-top: 2px;
+    transition: all var(--transition-normal);
+  }
+
+  .dq.answered-yes .dq-number {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    background: rgba(129, 140, 248, 0.1);
+  }
+
+  .dq.answered-no .dq-number {
+    border-color: var(--color-text-dim);
+    color: var(--color-text-dim);
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .dq-content {
+    flex: 1;
+  }
+
+  .dq-text {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--color-text);
+    margin-bottom: 6px;
+    line-height: 1.5;
+  }
+
+  .dq-sub {
+    font-size: 13px;
+    color: var(--color-text-dim);
+    line-height: 1.6;
+    margin-bottom: 14px;
+  }
+
+  .dq-buttons {
+    display: flex;
+    gap: 8px;
+  }
+
+  .dq-btn {
+    padding: 7px 20px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--color-text-dim);
+    font-size: 13px;
+    font-weight: 500;
+    transition: all var(--transition-fast);
+  }
+
+  .dq-btn:hover {
+    border-color: var(--color-border-hover);
+    color: var(--color-text-secondary);
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .dq-btn.selected {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    background: rgba(129, 140, 248, 0.08);
+  }
+
+  .dq-btn.selected-no {
+    border-color: var(--color-text-dim);
+    color: var(--color-text-secondary);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .diagnostic-result {
+    margin-top: 32px;
+    padding-top: 28px;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .diagnostic-result[hidden] {
+    display: none;
+  }
+
+  .diagnostic-result p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  .diagnostic-result strong {
+    color: var(--color-text);
+    font-weight: 500;
+  }
+
+  .result-label {
+    font: var(--font-label);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--color-accent);
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  /* Tips Section */
+  .tips-section {
+    margin: 56px 0;
+  }
+
+  .tips-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 32px;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .tips-tab {
+    padding: 14px 24px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--color-text-dim);
+    font-size: 14px;
+    font-weight: 500;
+    transition: all var(--transition-fast);
+    cursor: pointer;
+  }
+
+  .tips-tab:hover {
+    color: var(--color-text-secondary);
+  }
+
+  .tips-tab.active {
+    color: var(--color-text);
+    border-bottom-color: var(--color-accent);
+  }
+
+  .tips-panel {
+    display: none;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .tips-panel.active {
+    display: flex;
+  }
+
+  .tip {
+    display: flex;
+    gap: 20px;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--color-border);
+    align-items: flex-start;
+  }
+
+  .tip:last-child {
+    border-bottom: none;
+  }
+
+  .tip-number {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-accent);
+    opacity: 0.6;
+    flex-shrink: 0;
+    padding-top: 3px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tip-content {
+    flex: 1;
+  }
+
+  .tip-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 8px;
+  }
+
+  .tip-content p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--color-text-dim);
+    margin: 0;
+  }
+
+  /* Article Footer */
+  .article-footer {
+    margin-top: 56px;
+    padding-top: 40px;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .closing p {
+    color: var(--color-text-dim);
+  }
+
+  .footer-cta {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-accent);
+    transition: color var(--transition-fast);
+  }
+
+  .footer-cta:hover {
+    color: var(--color-text);
+  }
+
+  /* Site Footer */
+  .site-footer {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 40px 24px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .footer-wordmark {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 20px;
+  }
+
+  .footer-links a {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    transition: color var(--transition-fast);
+  }
+
+  .footer-links a:hover {
+    color: var(--color-text-dim);
+  }
+
+  /* Mobile */
+  @media (max-width: 600px) {
+    .site-nav {
+      padding: 20px 20px;
+    }
+
+    .article-page {
+      padding: 0 20px 80px;
+    }
+
+    .hero {
+      padding: 6vh 0 40px;
+    }
+
+    .hero-title {
+      font-size: 34px;
+    }
+
+    .hero-subtitle {
+      font-size: 16px;
+    }
+
+    .fork-diagram {
+      padding: 28px 20px;
+    }
+
+    .fork-branches {
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .fork-divider {
+      flex-direction: row;
+      padding: 16px 0;
+    }
+
+    .fork-line {
+      width: auto;
+      height: 1px;
+      flex: 1;
+    }
+
+    .fork-or {
+      padding: 0 12px;
+    }
+
+    .diagnostic {
+      padding: 28px 20px;
+    }
+
+    .dq {
+      gap: 14px;
+    }
+
+    .tips-tab {
+      padding: 12px 16px;
+      font-size: 13px;
+    }
+
+    .site-footer {
+      flex-direction: column;
+      gap: 16px;
+      padding: 32px 20px 48px;
+    }
+  }
+</style>
+
+<script>
+  // Fork diagram interaction
+  const forkBranches = document.querySelectorAll('.fork-branch');
+  forkBranches.forEach((branch) => {
+    branch.addEventListener('click', () => {
+      forkBranches.forEach((b) => b.classList.remove('selected'));
+      branch.classList.add('selected');
+    });
+  });
+
+  // Diagnostic interaction
+  const answers: Record<string, string> = {};
+  const diagnosticQuestions = document.querySelectorAll('.dq');
+  const resultIds = ['result-agent', 'result-automation', 'result-mostly-automation', 'result-middle'];
+
+  diagnosticQuestions.forEach((dq) => {
+    const questionNum = (dq as HTMLElement).dataset.question!;
+    const buttons = dq.querySelectorAll('.dq-btn');
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const answer = (btn as HTMLElement).dataset.answer!;
+        answers[questionNum] = answer;
+
+        buttons.forEach((b) => {
+          b.classList.remove('selected', 'selected-no');
+        });
+
+        if (answer === 'yes') {
+          btn.classList.add('selected');
+          dq.classList.remove('answered-no');
+          dq.classList.add('answered-yes');
+        } else {
+          btn.classList.add('selected-no');
+          dq.classList.remove('answered-yes');
+          dq.classList.add('answered-no');
+        }
+
+        if (Object.keys(answers).length === 3) {
+          showResult();
+        }
+      });
+    });
+  });
+
+  function showResult() {
+    const yesCount = Object.values(answers).filter((a) => a === 'yes').length;
+
+    resultIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) el.hidden = true;
+    });
+
+    let targetId: string;
+    let targetTab: string;
+
+    if (yesCount === 3) {
+      targetId = 'result-agent';
+      targetTab = 'agent';
+    } else if (yesCount === 0) {
+      targetId = 'result-automation';
+      targetTab = 'automation';
+    } else if (yesCount === 1) {
+      targetId = 'result-mostly-automation';
+      targetTab = 'automation';
+    } else {
+      targetId = 'result-middle';
+      targetTab = 'agent';
+    }
+
+    const target = document.getElementById(targetId);
+    if (target) {
+      target.hidden = false;
+      target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    activateTab(targetTab);
+  }
+
+  // Tips tabs
+  const tipsTabs = document.querySelectorAll('.tips-tab');
+  const tipsPanels = document.querySelectorAll('.tips-panel');
+
+  function activateTab(tab: string) {
+    tipsTabs.forEach((t) => {
+      t.classList.toggle('active', (t as HTMLElement).dataset.tab === tab);
+    });
+    tipsPanels.forEach((p) => {
+      p.classList.toggle('active', p.id === `panel-${tab}`);
+    });
+  }
+
+  tipsTabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      activateTab((tab as HTMLElement).dataset.tab!);
+    });
+  });
+</script>
