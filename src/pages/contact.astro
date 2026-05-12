@@ -14,7 +14,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
   <article class="page-content">
     <h1>Get in touch</h1>
     <div class="prose">
-      <p>Reach out at <a href="mailto:akshar.patel@airtable.com">akshar.patel@airtable.com</a></p>
+      <p>Reach out at <a id="contact-link" class="contact-placeholder">loading...</a></p>
     </div>
   </article>
 </BaseLayout>
@@ -85,4 +85,18 @@ import BaseLayout from '@layouts/BaseLayout.astro';
   .prose a:hover {
     color: var(--color-text);
   }
+
+  .contact-placeholder {
+    color: var(--color-text-muted);
+    cursor: default;
+  }
 </style>
+
+<script>
+  const link = document.getElementById('contact-link') as HTMLAnchorElement;
+  const parts = ['akshar', 'airtable', 'com'];
+  const addr = `${parts[0]}@${parts[1]}.${parts[2]}`;
+  link.href = `mailto:${addr}`;
+  link.textContent = addr;
+  link.classList.remove('contact-placeholder');
+</script>
