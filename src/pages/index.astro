@@ -266,10 +266,13 @@ import BaseLayout from '@layouts/BaseLayout.astro';
   </article>
 
   <footer class="site-footer">
-    <span class="footer-wordmark">Agent Literacy</span>
-    <div class="footer-links">
-      <a href="/about">About</a>
-      <a href="/contact">Contact</a>
+    <div class="disclaimer">This is a personal project. All views expressed here are my own and do not represent the views of my employer.</div>
+    <div class="footer-row">
+      <span class="footer-wordmark">&copy; 2026 Akshar Patel</span>
+      <div class="footer-links">
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+      </div>
     </div>
   </footer>
 </BaseLayout>
@@ -773,10 +776,20 @@ import BaseLayout from '@layouts/BaseLayout.astro';
     max-width: 720px;
     margin: 0 auto;
     padding: 40px 24px 60px;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .disclaimer {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+
+  .footer-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-top: 1px solid var(--color-border);
   }
 
   .footer-wordmark {
@@ -859,9 +872,12 @@ import BaseLayout from '@layouts/BaseLayout.astro';
       font-size: 13px;
     }
 
-    .site-footer {
+    .footer-row {
       flex-direction: column;
       gap: 16px;
+    }
+
+    .site-footer {
       padding: 32px 20px 48px;
     }
   }
