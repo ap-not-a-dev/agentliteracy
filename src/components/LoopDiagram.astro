@@ -657,22 +657,49 @@
 
   /* ===================== MOBILE ===================== */
   @media (max-width: 600px) {
-    .diagram-box { padding: 28px 16px 24px; }
-    .auto-rail { margin: 0 14px; height: 80px; }
+    .diagram-box { padding: 24px 14px 20px; }
+    .track-header { margin-bottom: 24px; }
+    .track-caption { font-size: 12px; }
+
+    /* Automation */
+    .auto-rail { margin: 0 10px; height: 76px; }
     .step-name { font-size: 10px; }
-    .step-eg { font-size: 9px; }
-    .ai-badge { font-size: 8px; padding: 2px 6px; }
-    .flow-node { width: 220px; padding: 12px 16px; }
-    .node-name { font-size: 12px; }
+    .step-eg { font-size: 8px; }
+    .ai-badge { font-size: 7px; padding: 2px 5px; top: -4px; }
+    .auto-note { font-size: 11px; }
+
+    /* Agent layout */
+    .goal-bar { padding: 10px 12px; }
+    .goal-text { font-size: 12px; }
+    .agent-flow { padding: 0 6px; }
+    .flow-node { width: 100%; max-width: 260px; padding: 10px 14px; gap: 10px; }
+    .node-name { font-size: 13px; }
     .node-detail { font-size: 11px; }
-    .agent-flow { padding: 0 40px; }
-    .branch-zone { width: 90%; }
-    .tool-pill { padding: 6px 10px; }
-    .tool-label { font-size: 10px; }
-    .goal-bar { padding: 10px 14px; }
-    .goal-text { font-size: 11px; }
-    .main-arc { left: 8px; }
-    .retry-arc { right: 8px; }
+    .flow-line { height: 16px; }
+
+    /* Branch / tools */
+    .branch-zone { width: 95%; }
+    .branch-svg, .converge-svg { height: 24px; }
+    .tool-row { gap: 6px; padding: 4px 0; }
+    .tool-pill { padding: 5px 8px; gap: 5px; }
+    .tool-label { font-size: 9px; }
+    .tool-dot { width: 5px; height: 5px; }
+
+    /* Loop arcs — hide on mobile, the loop-back text is enough */
+    .loop-arc { display: none; }
+
+    .loop-back-text { font-size: 12px; }
+    .loop-back-arrow { font-size: 16px; }
+  }
+
+  /* Extra small (iPhone SE, older phones) */
+  @media (max-width: 380px) {
+    .auto-rail { margin: 0 6px; }
+    .step-eg { display: none; }
+    .flow-node { max-width: 220px; padding: 8px 12px; }
+    .node-detail { font-size: 10px; }
+    .tool-pill { padding: 4px 6px; }
+    .tool-label { font-size: 8px; }
   }
 </style>
 

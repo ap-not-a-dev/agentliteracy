@@ -90,6 +90,12 @@ import BaseLayout from '@layouts/BaseLayout.astro';
     color: var(--color-text-muted);
     cursor: default;
   }
+
+  @media (max-width: 600px) {
+    .site-nav { padding: 20px 20px; }
+    .page-content { padding: 4vh 20px 80px; }
+    h1 { font-size: 24px; }
+  }
 </style>
 
 <script>
