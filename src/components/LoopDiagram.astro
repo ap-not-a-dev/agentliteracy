@@ -1,0 +1,992 @@
+---
+---
+
+<!-- AUTOMATION -->
+<div class="diagram-box" id="box-auto">
+  <div class="track-header">
+    <span class="track-label">Automation</span>
+    <span class="track-caption" id="auto-caption"></span>
+  </div>
+  <div class="auto-rail">
+    <div class="auto-line"></div>
+    <div class="auto-dot" id="auto-dot"></div>
+
+    <div class="auto-step" data-idx="0">
+      <span class="step-marker"></span>
+      <span class="step-name">Trigger</span>
+      <span class="step-eg">cron job fires at 9am</span>
+    </div>
+    <div class="auto-step" data-idx="1">
+      <span class="step-marker"></span>
+      <span class="step-name">Pull data</span>
+      <span class="step-eg">query CRM for new deals</span>
+    </div>
+    <div class="auto-step ai-step" data-idx="2">
+      <div class="ai-badge">AI</div>
+      <span class="step-marker"></span>
+      <span class="step-name">LLM</span>
+      <span class="step-eg">summarize pipeline changes</span>
+    </div>
+    <div class="auto-step" data-idx="3">
+      <span class="step-marker"></span>
+      <span class="step-name">Output</span>
+      <span class="step-eg">post to #sales-daily</span>
+    </div>
+    <div class="auto-step" data-idx="4">
+      <span class="step-marker"></span>
+      <span class="step-name">Sleep</span>
+      <span class="step-eg">until tomorrow at 9am</span>
+    </div>
+  </div>
+  <div class="auto-note" id="auto-note"></div>
+</div>
+
+<!-- AGENT -->
+<div class="diagram-box agent-box" id="box-agent">
+  <div class="track-header">
+    <span class="track-label">Agent</span>
+    <span class="track-caption" id="agent-caption"></span>
+  </div>
+
+  <div class="goal-bar">
+    <span class="goal-pulse"></span>
+    <span class="goal-text">Goal: "Handle the support queue by morning"</span>
+  </div>
+
+  <div class="agent-flow">
+    <!-- Main loop arc (left) -->
+    <div class="loop-arc main-arc" id="main-arc">
+      <div class="arc-border"></div>
+      <span class="arc-label">loop</span>
+    </div>
+
+    <!-- Retry arc (right) -->
+    <div class="loop-arc retry-arc" id="retry-arc">
+      <div class="arc-border"></div>
+      <span class="arc-label">retry</span>
+    </div>
+
+    <div class="flow-line" id="fl-0"></div>
+
+    <div class="flow-node" id="node-observe">
+      <span class="node-dot"></span>
+      <div class="node-body">
+        <span class="node-name">Observe</span>
+        <span class="node-detail" id="detail-observe"></span>
+      </div>
+    </div>
+
+    <div class="flow-line" id="fl-1"></div>
+
+    <div class="flow-node" id="node-decide">
+      <span class="node-dot"></span>
+      <div class="node-body">
+        <span class="node-name">Decide</span>
+        <span class="node-detail" id="detail-decide"></span>
+      </div>
+    </div>
+
+    <div class="branch-zone">
+      <svg class="branch-svg" viewBox="0 0 300 80" preserveAspectRatio="none">
+        <path class="bpath" data-tool="0" d="M150,0 C150,35 50,45 50,80" />
+        <path class="bpath" data-tool="1" d="M150,0 L150,80" />
+        <path class="bpath" data-tool="2" d="M150,0 C150,35 250,45 250,80" />
+      </svg>
+
+      <div class="tool-row">
+        <div class="tool-pill" data-tool="0">
+          <span class="tool-dot"></span>
+          <span class="tool-label">Search docs</span>
+        </div>
+        <div class="tool-pill" data-tool="1">
+          <span class="tool-dot"></span>
+          <span class="tool-label">Call API</span>
+        </div>
+        <div class="tool-pill" data-tool="2">
+          <span class="tool-dot"></span>
+          <span class="tool-label">Write code</span>
+        </div>
+      </div>
+
+      <svg class="converge-svg" viewBox="0 0 300 80" preserveAspectRatio="none">
+        <path class="cpath" data-tool="0" d="M50,0 C50,35 150,45 150,80" />
+        <path class="cpath" data-tool="1" d="M150,0 L150,80" />
+        <path class="cpath" data-tool="2" d="M250,0 C250,35 150,45 150,80" />
+      </svg>
+    </div>
+
+    <div class="flow-node" id="node-act">
+      <span class="node-dot"></span>
+      <div class="node-body">
+        <span class="node-name">Act</span>
+        <span class="node-detail" id="detail-act"></span>
+      </div>
+    </div>
+
+    <div class="flow-line" id="fl-act-eval"></div>
+
+    <div class="flow-node" id="node-eval">
+      <span class="node-dot"></span>
+      <div class="node-body">
+        <span class="node-name">Evaluate</span>
+        <span class="node-detail" id="detail-eval"></span>
+      </div>
+    </div>
+
+    <div class="flow-line" id="fl-bottom"></div>
+  </div>
+
+  <div class="loop-back" id="loop-back">
+    <span class="loop-back-arrow">&#8617;</span>
+    <span class="loop-back-text" id="loop-back-text"></span>
+  </div>
+</div>
+
+<style>
+  /* ===================== SHARED ===================== */
+  .diagram-box {
+    margin-bottom: 20px;
+    padding: 40px 36px 36px;
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    background: var(--color-surface);
+    overflow: hidden;
+  }
+
+  .diagram-box:first-of-type { margin-top: 56px; }
+  .diagram-box:last-of-type { margin-bottom: 56px; }
+
+  .track-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+  }
+
+  .track-label {
+    font: var(--font-label);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--color-accent);
+    font-size: 11px;
+  }
+
+  .track-caption {
+    font-size: 14px;
+    color: var(--color-text-muted);
+    letter-spacing: 0.2px;
+    transition: color 0.8s ease;
+    font-weight: 400;
+  }
+
+  .track-caption.active { color: var(--color-text); }
+
+  /* ===================== AUTOMATION ===================== */
+  .auto-rail {
+    position: relative;
+    height: 88px;
+    margin: 0 28px;
+  }
+
+  .auto-line {
+    position: absolute;
+    top: 16px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--color-border);
+  }
+
+  .auto-dot {
+    position: absolute;
+    top: 10px;
+    left: 0%;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    box-shadow: 0 0 16px rgba(129, 140, 248, 0.5), 0 0 6px rgba(129, 140, 248, 0.8);
+    transform: translateX(-50%);
+    z-index: 3;
+    opacity: 0;
+    transition: left 1.4s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.8s ease;
+  }
+
+  .auto-dot.visible { opacity: 1; }
+  .auto-dot.dimmed {
+    background: var(--color-text-muted);
+    box-shadow: none;
+    opacity: 0.35;
+    transition: left 1.4s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.8s ease, background 0.8s ease, box-shadow 0.8s ease;
+  }
+  .auto-dot.reset { transition: none; opacity: 0; }
+
+  .auto-step {
+    position: absolute;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    transform: translateX(-50%);
+  }
+
+  .auto-step[data-idx="0"] { left: 0%; }
+  .auto-step[data-idx="1"] { left: 25%; }
+  .auto-step[data-idx="2"] { left: 50%; }
+  .auto-step[data-idx="3"] { left: 75%; }
+  .auto-step[data-idx="4"] { left: 100%; }
+
+  .step-marker {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1.5px solid var(--color-text-muted);
+    background: var(--color-bg);
+    transition: all 0.6s ease;
+    position: relative;
+    top: 11px;
+    z-index: 2;
+  }
+
+  .step-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text-dim);
+    transition: color 0.6s ease;
+    position: relative;
+    top: 8px;
+    letter-spacing: 0.2px;
+  }
+
+  .step-eg {
+    font-size: 11px;
+    color: rgba(100, 116, 139, 0.4);
+    transition: color 0.6s ease;
+    white-space: nowrap;
+    position: relative;
+    top: 6px;
+    font-weight: 400;
+  }
+
+  /* Active state */
+  .auto-step.lit .step-marker {
+    border-color: var(--color-accent);
+    background: var(--color-accent);
+    box-shadow: 0 0 12px rgba(129, 140, 248, 0.4);
+  }
+  .auto-step.lit .step-name { color: #ffffff; }
+  .auto-step.lit .step-eg { color: var(--color-text-secondary); }
+
+  /* Passed state */
+  .auto-step.passed .step-marker {
+    border-color: rgba(129, 140, 248, 0.2);
+    background: var(--color-bg);
+  }
+  .auto-step.passed .step-name { color: var(--color-text-muted); }
+
+  /* Sleep state */
+  .auto-step.sleep-lit .step-marker {
+    border-color: var(--color-text-muted);
+    background: rgba(74, 74, 106, 0.4);
+  }
+  .auto-step.sleep-lit .step-name { color: var(--color-text-dim); }
+  .auto-step.sleep-lit .step-eg { color: var(--color-text-muted); }
+
+  /* --- AI step special treatment --- */
+  .ai-step { z-index: 4; }
+
+  .ai-badge {
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--color-bg);
+    background: rgba(129, 140, 248, 0.5);
+    padding: 2px 8px;
+    border-radius: 4px;
+    z-index: 5;
+    transition: all 0.6s ease;
+  }
+
+  .ai-step.lit .ai-badge {
+    background: var(--color-accent);
+    box-shadow: 0 0 12px rgba(129, 140, 248, 0.5);
+  }
+
+  .ai-step.lit .step-marker {
+    width: 12px;
+    height: 12px;
+    top: 10px;
+    border-color: var(--color-accent);
+    background: var(--color-accent);
+    box-shadow:
+      0 0 16px rgba(129, 140, 248, 0.6),
+      0 0 40px rgba(129, 140, 248, 0.15);
+  }
+
+  .auto-note {
+    font-size: 13px;
+    color: transparent;
+    text-align: center;
+    margin-top: 16px;
+    transition: color 0.8s ease;
+    min-height: 20px;
+    font-style: italic;
+  }
+
+  .auto-note.visible {
+    color: var(--color-text-secondary);
+  }
+
+  /* ===================== AGENT ===================== */
+  .goal-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    border: 1px solid rgba(129, 140, 248, 0.15);
+    border-radius: 10px;
+    background: rgba(129, 140, 248, 0.03);
+    margin-bottom: 8px;
+  }
+
+  .goal-pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    flex-shrink: 0;
+    animation: pulse 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; box-shadow: none; }
+    50% { opacity: 1; box-shadow: 0 0 8px rgba(129, 140, 248, 0.5); }
+  }
+
+  .goal-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    letter-spacing: 0.1px;
+  }
+
+  /* --- Flow --- */
+  .agent-flow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    padding: 0 56px;
+  }
+
+  .flow-line {
+    width: 1px;
+    height: 24px;
+    background: var(--color-border);
+    transition: background 0.6s ease;
+  }
+
+  .flow-line.lit { background: rgba(129, 140, 248, 0.35); }
+
+  .flow-node {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 20px;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    width: 280px;
+    transition: all 0.6s ease;
+    background: transparent;
+  }
+
+  .node-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1.5px solid var(--color-text-muted);
+    background: var(--color-bg);
+    flex-shrink: 0;
+    margin-top: 3px;
+    transition: all 0.6s ease;
+  }
+
+  .node-body {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .node-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--color-text-dim);
+    transition: color 0.6s ease;
+    letter-spacing: 0.1px;
+  }
+
+  .node-detail {
+    font-size: 13px;
+    color: transparent;
+    transition: color 0.6s ease;
+    line-height: 1.5;
+    min-height: 20px;
+  }
+
+  /* Active node */
+  .flow-node.active {
+    border-color: rgba(129, 140, 248, 0.35);
+    background: rgba(129, 140, 248, 0.03);
+  }
+
+  .flow-node.active .node-dot {
+    border-color: var(--color-accent);
+    background: var(--color-accent);
+    box-shadow: 0 0 10px rgba(129, 140, 248, 0.4);
+  }
+
+  .flow-node.active .node-name { color: #ffffff; }
+  .flow-node.active .node-detail { color: var(--color-text-secondary); }
+
+  /* Done node */
+  .flow-node.done {
+    border-color: rgba(129, 140, 248, 0.1);
+  }
+
+  .flow-node.done .node-dot {
+    border-color: rgba(129, 140, 248, 0.2);
+    background: var(--color-bg);
+  }
+
+  .flow-node.done .node-name { color: rgba(129, 140, 248, 0.3); }
+  .flow-node.done .node-detail { color: transparent; }
+
+  /* --- Branch zone --- */
+  .branch-zone {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .branch-svg, .converge-svg {
+    width: 100%;
+    height: 32px;
+    display: block;
+  }
+
+  .bpath, .cpath {
+    stroke: var(--color-border);
+    stroke-width: 1.5;
+    fill: none;
+    transition: all 0.6s ease;
+  }
+
+  .bpath.active, .cpath.active {
+    stroke: var(--color-accent);
+    filter: drop-shadow(0 0 4px rgba(129, 140, 248, 0.3));
+  }
+
+  .bpath.dimmed, .cpath.dimmed {
+    stroke: rgba(255, 255, 255, 0.025);
+  }
+
+  .tool-row {
+    display: flex;
+    justify-content: space-around;
+    padding: 6px 0;
+  }
+
+  .tool-pill {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 14px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    transition: all 0.6s ease;
+  }
+
+  .tool-pill.dimmed { opacity: 0.12; border-color: transparent; }
+
+  .tool-pill.lit {
+    border-color: rgba(129, 140, 248, 0.35);
+    background: rgba(129, 140, 248, 0.05);
+  }
+
+  .tool-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    border: 1.5px solid var(--color-text-muted);
+    background: var(--color-bg);
+    flex-shrink: 0;
+    transition: all 0.6s ease;
+  }
+
+  .tool-pill.lit .tool-dot {
+    border-color: var(--color-accent);
+    background: var(--color-accent);
+    box-shadow: 0 0 6px rgba(129, 140, 248, 0.5);
+  }
+
+  .tool-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-dim);
+    transition: color 0.6s ease;
+  }
+
+  .tool-pill.lit .tool-label { color: #ffffff; }
+
+  /* --- Loop arcs --- */
+  .loop-arc {
+    position: absolute;
+    opacity: 0.2;
+    transition: opacity 0.8s ease;
+  }
+
+  .loop-arc.visible { opacity: 1; }
+
+  .main-arc {
+    left: 16px;
+    top: 24px;
+    bottom: 24px;
+  }
+
+  .main-arc .arc-border {
+    width: 20px;
+    height: 100%;
+    border: 1px solid rgba(129, 140, 248, 0.25);
+    border-right: none;
+    border-radius: 14px 0 0 14px;
+    transition: border-color 0.8s ease;
+  }
+
+  .main-arc.visible .arc-border {
+    border-color: rgba(129, 140, 248, 0.5);
+  }
+
+  .main-arc .arc-label {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateX(-100%) translateY(-50%) rotate(-90deg);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(129, 140, 248, 0.4);
+    transition: color 0.8s ease;
+    white-space: nowrap;
+  }
+
+  .main-arc.visible .arc-label { color: rgba(129, 140, 248, 0.7); }
+
+  .retry-arc {
+    right: 16px;
+    top: 70px;
+    bottom: 50px;
+  }
+
+  .retry-arc .arc-border {
+    width: 20px;
+    height: 100%;
+    border: 1px dashed rgba(255, 180, 100, 0.15);
+    border-left: none;
+    border-radius: 0 14px 14px 0;
+    transition: border-color 0.8s ease;
+  }
+
+  .retry-arc.visible .arc-border {
+    border-color: rgba(255, 180, 100, 0.45);
+  }
+
+  .retry-arc .arc-label {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateX(100%) translateY(-50%) rotate(90deg);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(255, 180, 100, 0.3);
+    transition: color 0.8s ease;
+    white-space: nowrap;
+  }
+
+  .retry-arc.visible .arc-label { color: rgba(255, 180, 100, 0.6); }
+
+  /* --- Loop back indicator --- */
+  .loop-back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 10px;
+    padding: 8px 0;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+
+  .loop-back.visible {
+    opacity: 1;
+    color: rgba(129, 140, 248, 0.6);
+  }
+
+  .loop-back.retry-visible {
+    opacity: 1;
+    color: rgba(255, 180, 100, 0.7);
+  }
+
+  .loop-back-arrow { font-size: 18px; }
+
+  .loop-back-text {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+  }
+
+  /* ===================== MOBILE ===================== */
+  @media (max-width: 600px) {
+    .diagram-box { padding: 28px 16px 24px; }
+    .auto-rail { margin: 0 14px; height: 80px; }
+    .step-name { font-size: 10px; }
+    .step-eg { font-size: 9px; }
+    .ai-badge { font-size: 8px; padding: 2px 6px; }
+    .flow-node { width: 220px; padding: 12px 16px; }
+    .node-name { font-size: 12px; }
+    .node-detail { font-size: 11px; }
+    .agent-flow { padding: 0 40px; }
+    .branch-zone { width: 90%; }
+    .tool-pill { padding: 6px 10px; }
+    .tool-label { font-size: 10px; }
+    .goal-bar { padding: 10px 14px; }
+    .goal-text { font-size: 11px; }
+    .main-arc { left: 8px; }
+    .retry-arc { right: 8px; }
+  }
+</style>
+
+<script>
+  /* === Elements === */
+  const autoSteps = document.querySelectorAll('.auto-step');
+  const autoDot = document.getElementById('auto-dot') as HTMLElement;
+  const autoCaption = document.getElementById('auto-caption') as HTMLElement;
+  const autoNote = document.getElementById('auto-note') as HTMLElement;
+
+  const nodeObserve = document.getElementById('node-observe') as HTMLElement;
+  const nodeDecide = document.getElementById('node-decide') as HTMLElement;
+  const nodeAct = document.getElementById('node-act') as HTMLElement;
+  const nodeEval = document.getElementById('node-eval') as HTMLElement;
+  const detailObserve = document.getElementById('detail-observe') as HTMLElement;
+  const detailDecide = document.getElementById('detail-decide') as HTMLElement;
+  const detailAct = document.getElementById('detail-act') as HTMLElement;
+  const detailEval = document.getElementById('detail-eval') as HTMLElement;
+  const agentCaption = document.getElementById('agent-caption') as HTMLElement;
+  const toolPills = document.querySelectorAll('.tool-pill');
+  const bPaths = document.querySelectorAll('.bpath');
+  const cPaths = document.querySelectorAll('.cpath');
+  const flowLines = document.querySelectorAll('.flow-line');
+  const mainArc = document.getElementById('main-arc') as HTMLElement;
+  const retryArc = document.getElementById('retry-arc') as HTMLElement;
+  const loopBack = document.getElementById('loop-back') as HTMLElement;
+  const loopBackText = document.getElementById('loop-back-text') as HTMLElement;
+
+  /* === Timing === */
+  const T = {
+    glide: 1400,
+    dwell: 3000,
+    dwellAI: 4500,
+    sleep: 5000,
+    dead: 3500,
+    nodeDwell: 3500,
+    toolDwell: 3500,
+    branchIn: 800,
+    loopPause: 2500,
+    gap: 600,
+  };
+
+  function wait(ms: number) { return new Promise<void>(r => setTimeout(r, ms)); }
+
+  function cap(el: HTMLElement, text: string) {
+    el.textContent = text;
+    el.classList.toggle('active', text !== '');
+  }
+
+  /* =================== AUTOMATION =================== */
+  const autoPos = [0, 25, 50, 75, 100];
+  const autoCaptions = [
+    'Trigger fires',
+    'Pulling data from CRM...',
+    'AI is summarizing...',
+    'Posting results...',
+    'Sleeping...',
+  ];
+  const autoNotes = [
+    '',
+    '',
+    'This is the only non-deterministic step. Everything else is regular code.',
+    '',
+    '',
+  ];
+
+  async function runAuto() {
+    while (true) {
+      // Reset
+      autoSteps.forEach(s => s.classList.remove('lit', 'passed', 'sleep-lit'));
+      autoNote.classList.remove('visible');
+      autoNote.textContent = '';
+      autoDot.classList.add('reset');
+      autoDot.style.left = '0%';
+      await wait(60);
+      autoDot.classList.remove('reset', 'dimmed');
+      autoDot.classList.add('visible');
+
+      for (let i = 0; i < 5; i++) {
+        // Glide dot to position
+        autoDot.style.left = autoPos[i] + '%';
+
+        // Mark previous as passed
+        if (i > 0) {
+          autoSteps[i - 1].classList.remove('lit');
+          autoSteps[i - 1].classList.add('passed');
+          autoNote.classList.remove('visible');
+        }
+
+        // Wait for dot to arrive
+        await wait(T.glide);
+
+        // Light up current step
+        cap(autoCaption, autoCaptions[i]);
+
+        if (i === 4) {
+          autoSteps[i].classList.add('sleep-lit');
+          autoDot.classList.add('dimmed');
+          await wait(T.sleep);
+        } else {
+          autoSteps[i].classList.add('lit');
+
+          // Show note for AI step
+          if (autoNotes[i]) {
+            autoNote.textContent = autoNotes[i];
+            autoNote.classList.add('visible');
+          }
+
+          await wait(i === 2 ? T.dwellAI : T.dwell);
+        }
+      }
+
+      // Fully reset
+      autoSteps.forEach(s => s.classList.remove('lit', 'passed', 'sleep-lit'));
+      autoNote.classList.remove('visible');
+      autoDot.classList.add('reset');
+      autoDot.classList.remove('visible');
+      autoDot.style.left = '0%';
+      cap(autoCaption, 'Waiting for next trigger...');
+      await wait(T.dead);
+      cap(autoCaption, '');
+      await wait(800);
+    }
+  }
+
+  /* =================== AGENT =================== */
+  function clearAgent() {
+    [nodeObserve, nodeDecide, nodeAct, nodeEval].forEach(n => n.classList.remove('active', 'done'));
+    toolPills.forEach(t => t.classList.remove('lit', 'dimmed'));
+    bPaths.forEach(p => p.classList.remove('active', 'dimmed'));
+    cPaths.forEach(p => p.classList.remove('active', 'dimmed'));
+    flowLines.forEach(l => l.classList.remove('lit'));
+    mainArc.classList.remove('visible');
+    retryArc.classList.remove('visible');
+    loopBack.classList.remove('visible', 'retry-visible');
+    detailObserve.textContent = '';
+    detailDecide.textContent = '';
+    detailAct.textContent = '';
+    detailEval.textContent = '';
+  }
+
+  async function showNode(
+    node: HTMLElement,
+    detailEl: HTMLElement,
+    detail: string,
+    lineId?: string,
+  ) {
+    if (lineId) document.getElementById(lineId)?.classList.add('lit');
+    await wait(T.gap);
+    node.classList.remove('done');
+    node.classList.add('active');
+    detailEl.textContent = detail;
+    await wait(T.nodeDwell);
+  }
+
+  function fadeNode(node: HTMLElement) {
+    node.classList.remove('active');
+    node.classList.add('done');
+  }
+
+  async function pickTool(toolIdx: number) {
+    bPaths.forEach((p, i) => p.classList.add(i === toolIdx ? 'active' : 'dimmed'));
+    await wait(T.branchIn);
+    toolPills.forEach((t, i) => t.classList.add(i === toolIdx ? 'lit' : 'dimmed'));
+    cPaths.forEach((p, i) => p.classList.add(i === toolIdx ? 'active' : 'dimmed'));
+    await wait(T.toolDwell);
+  }
+
+  function clearTools() {
+    toolPills.forEach(t => t.classList.remove('lit', 'dimmed'));
+    bPaths.forEach(p => p.classList.remove('active', 'dimmed'));
+    cPaths.forEach(p => p.classList.remove('active', 'dimmed'));
+  }
+
+  const cycles = [
+    {
+      observe: '3 new tickets, 1 escalation',
+      decide: 'Handle escalation first',
+      tool: 0,
+      act: 'Searching knowledge base for error code',
+      eval: 'Found relevant article — response looks accurate',
+    },
+    {
+      observe: 'Escalation resolved. 2 tickets remaining',
+      decide: 'Bug report needs reproduction steps',
+      tool: 1,
+      act: 'Pulling deploy logs from last 48 hours',
+      eval: 'Root cause identified in Friday\'s deploy',
+    },
+    {
+      observe: '1 ticket left — feature request',
+      decide: 'Check if it\'s feasible to build',
+      tool: 2,
+      act: 'Prototyping the approach in a sandbox',
+      eval: 'Approach has edge cases — not confident',
+      retry: true,
+      retryDecide: 'Try a simpler workaround instead',
+      retryTool: 0,
+      retryAct: 'Checking existing workarounds in docs',
+      retryEval: 'Found documented workaround — good to go',
+    },
+    {
+      observe: 'All tickets resolved',
+      decide: 'Prepare summary for the team',
+      tool: 1,
+      act: 'Compiling resolution details from each ticket',
+      eval: 'Summary is clear and ready for morning review',
+    },
+  ] as Array<{
+    observe: string; decide: string;
+    tool: number; act: string; eval: string;
+    retry?: boolean; retryDecide?: string;
+    retryTool?: number; retryAct?: string; retryEval?: string;
+  }>;
+
+  let agentLoop = 0;
+
+  async function runAgent() {
+    while (true) {
+      const c = cycles[agentLoop % cycles.length];
+      clearAgent();
+
+      // Observe
+      cap(agentCaption, 'Observing...');
+      await showNode(nodeObserve, detailObserve, c.observe, 'fl-0');
+      fadeNode(nodeObserve);
+
+      // Decide
+      cap(agentCaption, 'Deciding...');
+      await showNode(nodeDecide, detailDecide, c.decide, 'fl-1');
+      fadeNode(nodeDecide);
+
+      // Tool selection
+      cap(agentCaption, 'Choosing a tool...');
+      await pickTool(c.tool);
+
+      // Act
+      cap(agentCaption, 'Executing...');
+      await showNode(nodeAct, detailAct, c.act);
+      fadeNode(nodeAct);
+
+      // Evaluate
+      cap(agentCaption, 'Evaluating results...');
+      document.getElementById('fl-act-eval')?.classList.add('lit');
+      await wait(T.gap);
+      nodeEval.classList.add('active');
+      detailEval.textContent = c.eval;
+      await wait(T.nodeDwell);
+
+      // Retry?
+      if (c.retry) {
+        retryArc.classList.add('visible');
+        loopBack.classList.add('retry-visible');
+        loopBackText.textContent = 'not satisfied — retrying';
+        cap(agentCaption, 'Not satisfied. Trying a different approach...');
+        await wait(T.nodeDwell);
+
+        fadeNode(nodeEval);
+        nodeAct.classList.remove('done');
+        loopBack.classList.remove('retry-visible');
+        clearTools();
+
+        // Back to Decide
+        cap(agentCaption, 'Re-deciding...');
+        await showNode(nodeDecide, detailDecide, c.retryDecide!);
+        fadeNode(nodeDecide);
+
+        // Different tool
+        cap(agentCaption, 'Choosing a different tool...');
+        await pickTool(c.retryTool!);
+
+        // Re-act
+        cap(agentCaption, 'Executing...');
+        await showNode(nodeAct, detailAct, c.retryAct!);
+        fadeNode(nodeAct);
+
+        // Re-evaluate
+        cap(agentCaption, 'Re-evaluating...');
+        document.getElementById('fl-act-eval')?.classList.add('lit');
+        await wait(T.gap);
+        nodeEval.classList.remove('done');
+        nodeEval.classList.add('active');
+        detailEval.textContent = c.retryEval!;
+        retryArc.classList.remove('visible');
+        await wait(T.nodeDwell);
+      }
+
+      // Loop back
+      fadeNode(nodeEval);
+      mainArc.classList.add('visible');
+      loopBack.classList.remove('retry-visible');
+      loopBack.classList.add('visible');
+      loopBackText.textContent = 'back to Observe';
+      cap(agentCaption, 'Looping back...');
+      await wait(T.loopPause);
+
+      agentLoop++;
+      clearAgent();
+      cap(agentCaption, '');
+      await wait(800);
+    }
+  }
+
+  /* === Start on scroll === */
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        agentLoop = 0;
+        runAuto();
+        runAgent();
+        observer.disconnect();
+      }
+    });
+  }, { threshold: 0.15 });
+
+  observer.observe(document.getElementById('box-auto')!);
+</script>
