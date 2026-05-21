@@ -3,58 +3,22 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 ---
 
 <BaseLayout title="About — Agent Literacy">
-  <nav class="site-nav">
-    <a href="/" class="wordmark">Agent Literacy</a>
-    <div class="nav-links">
-      <a href="/about" class="nav-link active">About</a>
-      <a href="/contact" class="nav-link">Contact</a>
-    </div>
-  </nav>
-
   <article class="page-content">
-    <h1>About Agent Literacy</h1>
+    <h1>About</h1>
+    <img src="/ap-headshot.jpg" alt="AP" class="headshot" />
     <div class="prose">
-      <p>We're in the early days of a fundamental shift in how people work. AI agents aren't just tools that execute commands — they're collaborators that can reshape how you think about problems.</p>
-      <p>Agent Literacy exists to help people navigate this shift. Not with hype or fear, but with practical frameworks, honest observations, and real examples of what human-agent collaboration looks like when it's done well.</p>
-      <p>This site is built by someone figuring this out in real time, sharing what they learn along the way. If you're curious about working with agents — whether for yourself or your team — you're in the right place.</p>
+      <p>I'm AP. I'm a product manager at Airtable, working in AI and on mobile. I write code in our production codebase even though I'm not an engineer by training. My background is civil engineering, then education, then years of deploying software for enterprise customers before I became a PM.</p>
+
+      <p>I built this site because most of what I read about AI agents either oversells what they are or undersells what they could be. People call everything an agent. Vendors slap "AI-powered" on workflows that were automations five years ago. The vocabulary is mush, and the mush gets in the way of having useful conversations about what to actually build and how to work with these tools.</p>
+
+      <p>I'm not trying to be a thought leader. I'm trying to think clearly in public, share what I'm seeing, and write the kind of thing I wish more people would write: honest, specific, opinionated when it matters, and useful for people doing the work.</p>
+
+      <p>If you have something to push back on, send it. <a href="/contact">Reach out</a>.</p>
     </div>
   </article>
 </BaseLayout>
 
 <style>
-  .site-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 24px 32px;
-    max-width: 720px;
-    margin: 0 auto;
-  }
-
-  .wordmark {
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: -0.3px;
-    color: var(--color-text);
-  }
-
-  .nav-links {
-    display: flex;
-    gap: 24px;
-  }
-
-  .nav-link {
-    color: var(--color-text-muted);
-    font-size: 13px;
-    font-weight: 500;
-    transition: color var(--transition-fast);
-  }
-
-  .nav-link:hover,
-  .nav-link.active {
-    color: var(--color-text);
-  }
-
   .page-content {
     max-width: 720px;
     margin: 0 auto;
@@ -68,6 +32,16 @@ import BaseLayout from '@layouts/BaseLayout.astro';
     margin-bottom: 32px;
   }
 
+  .headshot {
+    display: block;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 40px;
+    border: 1px solid var(--color-border);
+  }
+
   .prose {
     font: var(--font-body);
     color: var(--color-text-secondary);
@@ -79,7 +53,6 @@ import BaseLayout from '@layouts/BaseLayout.astro';
   }
 
   @media (max-width: 600px) {
-    .site-nav { padding: 20px 20px; }
     .page-content { padding: 4vh 20px 80px; }
     h1 { font-size: 24px; }
   }

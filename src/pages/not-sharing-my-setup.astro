@@ -1,0 +1,227 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="I'm Not Going to Share My Claude Code Setup With You — Agent Literacy" description="The whole point of AI tools is that they bend to you. So why would you start by adopting someone else's adaptation?">
+  <article class="article-page">
+    <a href="/" class="back-link">&larr; Home</a>
+    <header class="hero">
+      <h1 class="hero-title">I'm Not Going to Share My Claude Code Setup With You</h1>
+      <p class="hero-subtitle">The whole point of AI tools is that they bend to you. So why would you start by adopting someone else's adaptation?</p>
+      <div class="hero-meta"><span class="draft-tag">Draft</span> AP · May 20, 2026</div>
+      <div class="hero-line"></div>
+    </header>
+
+    <div class="prose">
+      <p>I've sent about 11,000 prompts to Claude Code over the last five months. I've built 21 custom skills, configured 100 security rules, wired up integrations to my company's data warehouse and Slack, and shipped 57 PRs in production TypeScript as a PM who isn't an engineer by training.</p>
+
+      <p>People keep asking me to share my setup.</p>
+
+      <p class="callout"><strong>I'm not going to.</strong></p>
+
+      <p>Not because it's secret. Because it wouldn't help you.</p>
+
+      <h2>The Setup That Only Works for Me</h2>
+
+      <p>My degree is in civil engineering. My grad degree is in education. Before I became a PM I spent years deploying software for enterprise customers. I started writing code in the production codebase about a year ago, and Claude Code is a big part of how that became possible.</p>
+
+      <p>Every piece of my setup reflects that specific path. I built a customer sentiment skill that reads full Gong call transcripts instead of AI summaries because I spent years in customer-facing roles and I know that the exact words people use matter more than a one-paragraph brief. I built a skill that simulates code reviews from the specific engineers who work on the files I touch because I'm a PM shipping code into an engineering codebase and I need to catch the obvious mistakes before real reviewers see them. I built a writing skill that runs a four-pass edit to strip AI patterns from text because I have strong opinions about how writing should sound and I know what makes AI output recognizable.</p>
+
+      <p>If I gave you those skills, you'd be adopting my workflow, my opinions about how call transcripts should be read, my assumptions about what a code review should catch, my rules about what makes writing sound human. You'd spend more time adapting my stuff to fit your brain than you would building your own from scratch.</p>
+
+      <h2>Why Sharing Setups Misses the Point</h2>
+
+      <p>There's a whole genre of content right now that's "here's my CLAUDE.md" or "here's my dotfiles for AI." I get the impulse. When a tool is new, you want to see how other people use it. I look at other people's setups too. I enjoy seeing how someone else thinks about the problem.</p>
+
+      <p>But there's a difference between learning from someone's approach and adopting their configuration. When you copy someone's CLAUDE.md, you're importing their assumptions about how work should flow, their opinions about what's important, their tolerance for risk, their communication style. Those things are personal, and they should be.</p>
+
+      <p>The whole promise of AI tools like Claude Code is that they bend to you. You don't have to learn a rigid interface or adapt to someone else's workflow. You can describe how you think, how you work, what annoys you, what you care about, and the tool shapes itself around that. Every other productivity tool in history made you adapt to it. This one adapts to you.</p>
+
+      <p>So why would you start by adopting someone else's adaptation?</p>
+
+      <h2>What I Actually Did</h2>
+
+      <p>I didn't start with a plan. I started with a problem.</p>
+
+      <p>The first skill I built was for customer research. I was spending hours reading call transcripts manually, trying to find patterns across dozens of calls. So I described that workflow to Claude Code and turned it into a reusable command. It wasn't elegant. But it worked for me because I built it around how I actually think about customer conversations, not how someone else thinks I should.</p>
+
+      <p>Then I built one for CI monitoring because I was tired of watching build dashboards. Then one for account research because I was doing the same data warehouse queries every week. Then one for drafting Slack messages because I wanted to review before sending. Then one for generating demo data. Then one for filing documents into the right folder. Each one started with something that annoyed me, not with a best practices list.</p>
+
+      <p>I've built a browser router app for my local machine. I've built a custom MCP server for a tool that didn't have one. I built an entire self-improving loop where my PR review feedback gets extracted into a database, and future code gets checked against those patterns automatically. None of this came from reading someone else's guide. It came from hitting a wall, getting annoyed, and saying "can Claude Code fix this?"</p>
+
+      <p>Some of it was probably counterproductive. I've definitely spent time (and tokens!) building things that already existed somewhere. But I learned more from building my own version than I would have from installing someone else's. The building is where you figure out what you actually need, because you're forced to articulate your own workflow to a machine that takes you literally.</p>
+
+      <h2>How I Use the Basics</h2>
+
+      <p>I run about 10 sessions at once. Right now one is for this article, one for a mobile feature I'm researching, one for a PR I'm iterating on, one where I was debugging a Slack bot earlier. I flip between them like browser tabs. Each holds its own context, so I can leave something mid-thought and come back hours later without re-explaining. About 650 sessions total over five months.</p>
+
+      <p>I rename sessions as soon as I know what they're about: "Mobile POC Demo," "csv import issue," "tabbed record detail pages." Takes two seconds. When you have ten sessions open and they're all called "Claude," you waste time clicking through each one.</p>
+
+      <p>About 4% of my prompts are screenshots. I paste one in and say "this doesn't look good" or "the spacing is off." For UI work, pointing at what's wrong beats describing it every time.</p>
+
+      <h2>The Things Worth Sharing</h2>
+
+      <p>What I will share is the principles, not the implementation.</p>
+
+      <p><strong>Build for your annoyances.</strong> My skills exist because of specific friction in my specific day. Yours will be different. Start with the thing that makes you sigh.</p>
+
+      <p><strong>Let it run.</strong> Auto mode with a strong deny list instead of approving every action. The deny list blocks about 100 patterns (package installs, credential access, shell config edits). Everything else runs on its own. Permission prompts break concentration. Define your real boundaries and let the tool move within them.</p>
+
+      <p><strong>Simulate the humans before you ship.</strong> My favorite skill is one that reviews my PRs as the specific engineers who actually review them. It looks at who recently touched the files I changed, pulls their last 20 review comments to build a profile of what each person flags, then dispatches parallel agents to review my code as each engineer would. It fixes what it finds and runs another round with fresh reviewers until it's clean. By the time real engineers see my PR, the obvious stuff is already caught. The pattern transfers: figure out who or what is going to judge your work, and have the AI play that role before they do.</p>
+
+      <p><strong>Talk to it.</strong> Over 80% of my prompts are voice-dictated through Wispr Flow. You wouldn't know from reading them because Wispr produces clean, punctuated text. On a typical day I type maybe 15-20% of my inputs: slash commands, file paths, "yea" or "push it." Everything else is spoken. It changes how you interact with the tool. You explain what you want the way you'd tell a colleague, not the way you'd write a spec. More honest about what you actually need.</p>
+
+      <p class="aside"><em>Steal these principles, not the config.</em></p>
+
+      <h2>The Real Takeaway</h2>
+
+      <p>AI is an equalizer, but not the way people usually mean. It's not that we all get the same tools and produce the same output. It's that we can all reach the same outcomes (shipping code, building products, writing documents, researching customers) through paths that are genuinely our own.</p>
+
+      <p>I think in terms of customer conversations and product gaps. Someone else thinks in terms of data models and system architecture. Someone else thinks in narratives and stakeholder management. We all do overlapping work, but how we approach it is shaped by how we think, what we've done before, and what we care about. AI tools can accommodate all of that.</p>
+
+      <p>The instinct to standardize, to find the one best CLAUDE.md, to build a team-wide skill set, to define "best practices" for how everyone should use the tool: that instinct comes from a world where tools were rigid and people had to conform to them. We're not in that world anymore.</p>
+
+      <p>So don't copy my setup. I'm not going to share it, and you wouldn't want it anyway. Build your own. Start with what annoys you, describe it to the machine, iterate until it feels right. You'll end up somewhere I never would have, and that's the whole point.</p>
+
+      <p class="sign-off">— AP</p>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  /* Back link */
+  .back-link {
+    display: inline-block;
+    font-size: 13px;
+    color: var(--color-text-muted);
+    margin-bottom: 32px;
+    transition: color var(--transition-fast);
+  }
+
+  .back-link:hover {
+    color: var(--color-text-dim);
+  }
+
+  /* Article */
+  .article-page {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 4vh 24px 100px;
+  }
+
+  /* Hero */
+  .hero {
+    padding: 4vh 0 56px;
+    text-align: left;
+  }
+
+  .hero-title {
+    font-size: 42px;
+    font-weight: 300;
+    line-height: 1.15;
+    letter-spacing: -1.5px;
+    margin-bottom: 20px;
+  }
+
+  .hero-subtitle {
+    font-size: 18px;
+    font-weight: 300;
+    color: var(--color-text-dim);
+    line-height: 1.6;
+    max-width: 520px;
+  }
+
+  .hero-meta {
+    font-size: 13px;
+    color: var(--color-text-muted);
+    margin-top: 20px;
+  }
+
+  .draft-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #18181b;
+    background: #fbbf24;
+    border-radius: 4px;
+    padding: 2px 8px;
+    margin-right: 8px;
+    vertical-align: 1px;
+  }
+
+  .hero-line {
+    width: 48px;
+    height: 1px;
+    background: var(--color-accent);
+    margin-top: 40px;
+    opacity: 0.5;
+  }
+
+  /* Prose */
+  .prose {
+    font: var(--font-body);
+    color: var(--color-text-secondary);
+  }
+
+  .prose h2 {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-top: 56px;
+    margin-bottom: 20px;
+    letter-spacing: -0.3px;
+  }
+
+  .prose p {
+    margin-bottom: 20px;
+    line-height: 1.8;
+    font-size: 15px;
+  }
+
+  .prose strong {
+    font-weight: 500;
+    color: var(--color-text);
+  }
+
+  .prose em {
+    font-style: italic;
+  }
+
+  .sign-off {
+    margin-top: 40px;
+    color: var(--color-text-dim);
+    font-weight: 400;
+  }
+
+  .callout {
+    font-size: 20px;
+    color: var(--color-text);
+    margin-top: 12px;
+    margin-bottom: 36px;
+  }
+
+  .aside {
+    color: var(--color-text-dim);
+    margin-top: 32px;
+    margin-bottom: 32px;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  /* Mobile */
+  @media (max-width: 600px) {
+    .article-page {
+      padding: 2vh 20px 80px;
+    }
+
+    .hero-title {
+      font-size: 30px;
+    }
+
+    .hero-subtitle {
+      font-size: 16px;
+    }
+  }
+</style>

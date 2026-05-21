@@ -5,6 +5,9 @@ interface Props {
 }
 
 const { title, description = 'Practical resources for the human side of human-agent collaboration.' } = Astro.props;
+const pathname = Astro.url.pathname;
+const isAbout = pathname.startsWith('/about');
+const isContact = pathname.startsWith('/contact');
 ---
 
 <!DOCTYPE html>
@@ -17,6 +20,20 @@ const { title, description = 'Practical resources for the human side of human-ag
   <title>{title}</title>
 </head>
 <body>
+  <header class="site-header">
+    <div class="construction-banner">
+      <span class="banner-text">Site Under Construction</span>
+    </div>
+    <nav class="site-nav">
+      <div class="site-nav-inner">
+        <a href="/" class="wordmark">Agent Literacy</a>
+        <div class="nav-links">
+          <a href="/about" class={`nav-link${isAbout ? ' active' : ''}`}>About</a>
+          <a href="/contact" class={`nav-link${isContact ? ' active' : ''}`}>Contact</a>
+        </div>
+      </div>
+    </nav>
+  </header>
   <slot />
 </body>
 </html>
