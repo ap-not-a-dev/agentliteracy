@@ -31,6 +31,16 @@ import BaseLayout from '@layouts/BaseLayout.astro';
         </div>
         <span class="featured-arrow">&rarr;</span>
       </a>
+
+      <a href="https://rdsw.apnotadev.com/" target="_blank" rel="noopener" class="featured-card">
+        <div class="featured-content">
+          <span class="featured-tag">Talk</span>
+          <h2 class="featured-title">Came for the Vibes, Stayed for the Code</h2>
+          <p class="featured-desc">A workshop for PMs, founders, and designers on building real software with AI. Delivered at Raleigh-Durham Startup Week.</p>
+          <span class="featured-meta">AP · April 23, 2026 · External &nearr;</span>
+        </div>
+        <span class="featured-arrow">&nearr;</span>
+      </a>
     </section>
 
   </div>
@@ -95,8 +105,9 @@ import BaseLayout from '@layouts/BaseLayout.astro';
   .featured-card {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: stretch;
     padding: 32px;
+    min-height: 240px;
     border: 1px solid var(--color-border);
     border-radius: 16px;
     background: var(--color-surface);
@@ -113,6 +124,8 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 
   .featured-content {
     flex: 1;
+    display: flex;
+    flex-direction: column;
   }
 
   .featured-tag {
@@ -158,6 +171,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
   .featured-meta {
     font-size: 12px;
     color: var(--color-text-muted);
+    margin-top: auto;
   }
 
   .featured-arrow {
