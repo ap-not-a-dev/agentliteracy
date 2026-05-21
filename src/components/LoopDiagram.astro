@@ -14,28 +14,28 @@
     <div class="auto-step" data-idx="0">
       <span class="step-marker"></span>
       <span class="step-name">Trigger</span>
-      <span class="step-eg">cron job fires at 9am</span>
+      <span class="step-eg">user asks question in Slack</span>
     </div>
     <div class="auto-step" data-idx="1">
       <span class="step-marker"></span>
       <span class="step-name">Pull data</span>
-      <span class="step-eg">query CRM for new deals</span>
+      <span class="step-eg">search docs and past tickets</span>
     </div>
     <div class="auto-step ai-step" data-idx="2">
       <div class="ai-badge">AI</div>
       <span class="step-marker"></span>
       <span class="step-name">LLM</span>
-      <span class="step-eg">summarize pipeline changes</span>
+      <span class="step-eg">draft an answer</span>
     </div>
     <div class="auto-step" data-idx="3">
       <span class="step-marker"></span>
       <span class="step-name">Output</span>
-      <span class="step-eg">post to #sales-daily</span>
+      <span class="step-eg">reply in thread</span>
     </div>
     <div class="auto-step" data-idx="4">
       <span class="step-marker"></span>
       <span class="step-name">Sleep</span>
-      <span class="step-eg">until tomorrow at 9am</span>
+      <span class="step-eg">until next message</span>
     </div>
   </div>
   <div class="auto-note" id="auto-note"></div>
@@ -756,9 +756,9 @@
   const autoPos = [0, 25, 50, 75, 100];
   const autoCaptions = [
     'Trigger fires',
-    'Pulling data from CRM...',
-    'AI is summarizing...',
-    'Posting results...',
+    'Searching docs...',
+    'AI is drafting an answer...',
+    'Replying in thread...',
     'Sleeping...',
   ];
   const autoNotes = [
